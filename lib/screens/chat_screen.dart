@@ -1,24 +1,14 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:ai/constants.dart';
-import 'package:chat_gpt_flutter/chat_gpt_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:speech_to_text/speech_recognition_result.dart';
-import 'package:speech_to_text/speech_to_text.dart';
 
-import '../controller/purchases_controller.dart';
-import '../services/ads/ads_services.dart';
-import '../services/api/openai_api.dart';
+import '../constants.dart';
 import '../controller/message_controller.dart';
 import '../controller/theme_controller.dart';
 import '../modules/message_module.dart';
-import 'go_premium_screen.dart';
+import '../packages.dart';
 import 'settings_screen.dart';
-import 'widgets/image_message.dart';
 import 'widgets/widgets.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -30,15 +20,13 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _textController = TextEditingController();
-  final PurchasesController _purchasesController = Get.find();
   final MessageController _messageController =
       Get.put(MessageController(), permanent: true);
-  final OpenAiAPI _openAiAPI = OpenAiAPI();
+
   final SpeechToText _speechToText = SpeechToText();
-  final AdsServices _adsServices = AdsServices();
   final List<MessageModule> _chatMessage = [];
   final List<MessageModule> _savedChatMessage = [];
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   bool _aiIsWriting = false;
   bool _isRecording = false;
   bool _showRecording = false;
@@ -46,11 +34,6 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _speechInit = false;
   String _lastWords = '';
   final ThemeController _themeController = Get.find();
-
-  final ChatGpt chatGpt =
-      ChatGpt(apiKey: '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');
-  StreamSubscription<CompletionResponse>? streamSubscription;
-  StreamSubscription<StreamCompletionResponse>? chatStreamSubscription;
 
   Future _sendMessage(
     String msg, {
@@ -79,8 +62,8 @@ class _ChatScreenState extends State<ChatScreen> {
 
   _receiveMessage(String msg, bool isImage) async {
     MessageModule messageModule;
-    Map<String, dynamic> response =
-        await _openAiAPI.sendMessage(messageText: msg, wantsImage: isImage);
+    Map<String, dynamic> response = {};
+    // await _openAiAPI.sendMessage(messageText: msg, wantsImage: isImage);
 
     StringBuffer stringBuffer = StringBuffer();
 
@@ -112,45 +95,6 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
     setState(() {});
-    final testRequest = ChatCompletionRequest(
-      stream: true,
-      maxTokens: 4000,
-      messages: [Message(role: Role.user.name, content: msg)],
-      model: ChatGptModel.gpt4,
-    );
-    await _chatStreamResponse(testRequest);
-  }
-
-  _chatStreamResponse(ChatCompletionRequest request) async {
-    chatStreamSubscription?.cancel();
-    try {
-      final stream = await chatGpt.createChatCompletionStream(request);
-      chatStreamSubscription = stream?.listen(
-        (event) => setState(
-          () {
-            if (event.streamMessageEnd) {
-              chatStreamSubscription?.cancel();
-              _messageController.insertQRDate(
-                message: _chatMessage.last.message.toString().trim(),
-                isAI: 1,
-                isImage: 0,
-              );
-              setState(() {});
-            } else {
-              setState(() {});
-              _chatMessage.last.message.write(
-                event.choices?.first.delta?.content,
-              );
-            }
-          },
-        ),
-      );
-    } catch (error) {
-      setState(() {
-        _chatMessage.last.message.write("Error");
-      });
-      log("Error occurred: $error");
-    }
   }
 
   /// This has to happen only once per app
@@ -218,21 +162,10 @@ class _ChatScreenState extends State<ChatScreen> {
     setState(() {});
   }
 
-  _loadAds() async {
-    await _purchasesController.init();
-    if (!_purchasesController.isVIP) {
-      await _adsServices.loadBannerAd();
-      await _adsServices.loadNativeAd();
-      await _adsServices.loadRewardedAd();
-      setState(() {});
-    }
-  }
-
   @override
   void initState() {
     super.initState();
 
-    _loadAds();
     _getMessage();
   }
 
@@ -241,7 +174,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: const Text('Chate GPT 👋'),
+        title: const Text('Chatbot 👋'),
         elevation: 0,
         actions: [
           IconButton(
@@ -249,7 +182,6 @@ class _ChatScreenState extends State<ChatScreen> {
               _isRecording = false;
               _showRecording = false;
               setState(() {});
-              _adsServices.loadInterstitialAd();
               Navigator.push(
                   context,
                   PageTransition(
@@ -278,11 +210,6 @@ class _ChatScreenState extends State<ChatScreen> {
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   if (_chatMessage[index].isAI) {
-                    if (_chatMessage[index].isImage) {
-                      return ImageMessage(
-                        messageModule: _chatMessage[index],
-                      );
-                    }
                     return AIMessage(
                       messageModule: _chatMessage[index],
                     );
@@ -298,11 +225,6 @@ class _ChatScreenState extends State<ChatScreen> {
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   if (_savedChatMessage[index].isAI) {
-                    if (_savedChatMessage[index].isImage) {
-                      return ImageMessage(
-                        messageModule: _savedChatMessage[index],
-                      );
-                    }
                     return AIMessage(
                       messageModule: _savedChatMessage[index],
                     );
@@ -314,15 +236,6 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ],
           ),
-          if (_adsServices.bannerAd != null)
-            Align(
-              alignment: Alignment.topCenter,
-              child: SizedBox(
-                width: Get.width,
-                height: _adsServices.bannerAd!.size.height.toDouble(),
-                child: AdWidget(ad: _adsServices.bannerAd!),
-              ),
-            ),
         ],
       ),
       bottomSheet: GetBuilder<ThemeController>(builder: (themeController) {
@@ -338,7 +251,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ? Constants.primaryDarkColor
               : Colors.grey.shade100,
           height: _isRecording ? 250 : null,
-          constraints: BoxConstraints(maxHeight: 300, minHeight: 80),
+          constraints: const BoxConstraints(maxHeight: 300, minHeight: 80),
           //     : _purchasesController.isVIP
           //         ? 80
           //         : 130,
@@ -349,47 +262,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Visibility(
-                    visible: _purchasesController.isVIP,
-                    replacement: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "You have ${themeController.freeMessagesCunter} free message left. "
-                                .tr,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  PageTransition(
-                                      type: PageTransitionType.bottomToTop,
-                                      child: const GoPremiumScreen()));
-                            },
-                            child: Text(
-                              "Go Premium".tr,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: Constants.primaryColor,
-                                decoration: TextDecoration.underline,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    child: const SizedBox(
-                      height: 0,
-                      width: 0,
-                    ),
-                  ),
                   Container(
-                    constraints: BoxConstraints(maxHeight: 150),
+                    constraints: const BoxConstraints(maxHeight: 150),
                     child: UserTextField(
                       textController: _textController,
                       onChanged: (value) {
@@ -401,58 +275,9 @@ class _ChatScreenState extends State<ChatScreen> {
                         });
                       },
                       onSendText: () async {
-                        if (_purchasesController.isVIP) {
-                          await _sendMessage(_textController.text);
-                        } else if (themeController.freeMessagesCunter <= 0) {
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                  type: PageTransitionType.bottomToTop,
-                                  child: const GoPremiumScreen()));
-                        } else {
-                          await _sendMessage(_textController.text);
-                        }
+                        await _sendMessage(_textController.text);
                       },
-                      onPressImage: () async {
-                        if (_purchasesController.isVIP) {
-                          if (themeController.local == 'ar') {
-                            if (themeController.isFirstImage) {
-                              Get.snackbar(
-                                'تنبيه',
-                                'للحصول على صور بدقة افضل يرجى كتابة الوصف باللغة الإنجليزية',
-                                backgroundColor: Colors.orange,
-                                colorText: Colors.white,
-                                duration: Duration(seconds: 30),
-                              );
-                              themeController.updateImage();
-                            }
-                          }
-
-                          await _sendMessage(_textController.text,
-                              isImage: true);
-                        } else if (themeController.freeMessagesCunter <= 0) {
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                  type: PageTransitionType.bottomToTop,
-                                  child: const GoPremiumScreen()));
-                        } else {
-                          if (themeController.local == 'ar') {
-                            if (themeController.isFirstImage) {
-                              Get.snackbar(
-                                'تنبيه',
-                                'للحصول على صور بدقة افضل يرجى كتابة الوصف باللغة الإنجليزية',
-                                backgroundColor: Colors.orange,
-                                colorText: Colors.white,
-                                duration: Duration(seconds: 30),
-                              );
-                              themeController.updateImage();
-                            }
-                          }
-                          await _sendMessage(_textController.text,
-                              isImage: true);
-                        }
-                      },
+                      onPressImage: () async {},
                     ),
                   ),
                 ],
@@ -463,39 +288,18 @@ class _ChatScreenState extends State<ChatScreen> {
                     : 'Hi. You can ask me anything'.tr,
                 speechEnabled: _speechToText.isListening,
                 onRecord: () async {
-                  if (_purchasesController.isVIP) {
-                    _speechEnabled = !_speechEnabled;
-                    if (_speechInit) {
-                      if (_speechToText.isNotListening) {
-                        _startListening(themeController.voiceLocal);
-                      } else {
-                        _stopListening();
-                      }
+                  _speechEnabled = !_speechEnabled;
+                  if (_speechInit) {
+                    if (_speechToText.isNotListening) {
+                      _startListening(themeController.voiceLocal);
                     } else {
-                      _initSpeech();
+                      _stopListening();
                     }
-
-                    setState(() {});
-                  } else if (themeController.freeMessagesCunter <= 0) {
-                    Navigator.push(
-                        context,
-                        PageTransition(
-                            type: PageTransitionType.bottomToTop,
-                            child: const GoPremiumScreen()));
                   } else {
-                    _speechEnabled = !_speechEnabled;
-                    if (_speechInit) {
-                      if (_speechToText.isNotListening) {
-                        _startListening(themeController.voiceLocal);
-                      } else {
-                        _stopListening();
-                      }
-                    } else {
-                      _initSpeech();
-                    }
-
-                    setState(() {});
+                    _initSpeech();
                   }
+
+                  setState(() {});
                 },
                 onKeyboardPressed: () {
                   setState(() {
