@@ -28,8 +28,7 @@ class AIMessage extends StatelessWidget {
                 maxWidth: Get.width * 0.85,
               ),
               decoration: BoxDecoration(
-                // color:
-                //     themeController.isDark ? Constants.darkColor : Colors.white,
+                color: Theme.of(context).canvasColor,
                 borderRadius: BorderRadius.only(
                   topRight: themeController.appLocal == 'en'
                       ? const Radius.circular(15)

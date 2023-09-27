@@ -20,12 +20,10 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _textController = TextEditingController();
-  final ChatController _messageController =
-      Get.put(ChatController(), permanent: true);
+  final ChatController _chatController = Get.put(ChatController());
 
   final SpeechToText _speechToText = SpeechToText();
-  final List<Message> _newMessages = [];
-  final List<Message> _savedChatMessage = [];
+
   final ScrollController _scrollController = ScrollController();
   bool _aiIsWriting = false;
   bool _isRecording = false;
@@ -33,8 +31,8 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _speechEnabled = false;
   bool _speechInit = false;
   String _lastWords = '';
-  // final SettingsController _themeController = Get.find();
 
+  final List<Message> _chatMessage = [];
   Future _sendMessage(String msg) async {
     Message messageModule;
     StringBuffer stringBuffer = StringBuffer();
@@ -44,47 +42,19 @@ class _ChatScreenState extends State<ChatScreen> {
       isAI: false,
     );
     _scrollController.jumpTo(0);
-    _newMessages.add(messageModule);
+    _chatMessage.add(messageModule);
     setState(() {
       _textController.clear();
       _aiIsWriting = true;
     });
-    await _messageController.insertQRDate(message: msg);
-    await _receiveMessage(msg, false);
+    await _receiveMessage(msg);
     setState(() {
       _aiIsWriting = false;
     });
   }
 
-  _receiveMessage(String msg, bool isImage) async {
-    Message messageModule;
-    Map<String, dynamic> response = {};
-    // await _openAiAPI.sendMessage(messageText: msg, wantsImage: isImage);
-
-    StringBuffer stringBuffer = StringBuffer();
-
-    if (isImage) {
-      log(response['data'][0]['url']);
-      stringBuffer.write(response['data'][0]['url']);
-      messageModule = Message(
-        message: stringBuffer,
-        isAI: true,
-        isImage: true,
-      );
-
-      _newMessages.add(messageModule);
-      await _messageController.insertQRDate(
-        message: messageModule.message.toString().trim(),
-        isAI: 1,
-        isImage: 1,
-      );
-    } else {
-      await _sendChatMessage(msg);
-    }
-  }
-
-  Future _sendChatMessage(String msg) async {
-    _newMessages.add(
+  Future _receiveMessage(String msg) async {
+    _chatMessage.add(
       Message(
         message: StringBuffer(),
         isAI: true,
@@ -126,45 +96,6 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
-  _getMessage() async {
-    Message messageModule;
-
-    StringBuffer stringBuffer = StringBuffer();
-    stringBuffer.write('Hi. You can ask me anything'.tr);
-    messageModule = Message(
-      isAI: true,
-      message: stringBuffer,
-    );
-    _newMessages.add(messageModule);
-    setState(() {});
-    await _messageController.readData();
-    for (var message in _messageController.messages) {
-      StringBuffer buffer = StringBuffer();
-      buffer.write(message['message'].toString());
-      if (message['is_ai'] == 1) {
-        messageModule = Message(
-          isAI: true,
-          isImage: message['is_image'] == 1,
-          message: buffer,
-        );
-      } else {
-        messageModule = Message(
-          isAI: false,
-          message: buffer,
-        );
-      }
-      _savedChatMessage.add(messageModule);
-    }
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    _getMessage();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -200,14 +131,14 @@ class _ChatScreenState extends State<ChatScreen> {
             controller: _scrollController,
             children: [
               Visibility(visible: _aiIsWriting, child: const AIWriting()),
-              ChatMessagesList(messages: _newMessages),
-              ChatMessagesList(messages: _savedChatMessage),
+              ChatMessagesList(messages: _chatController.chatMessage),
             ],
           ),
         ],
       ),
       bottomSheet: GetBuilder<SettingsController>(builder: (themeController) {
         return AnimatedContainer(
+          color: Theme.of(context).scaffoldBackgroundColor,
           duration: const Duration(milliseconds: 500),
           onEnd: () {
             setState(() {
@@ -215,7 +146,7 @@ class _ChatScreenState extends State<ChatScreen> {
             });
           },
           height: _isRecording ? 250 : null,
-          constraints: const BoxConstraints(maxHeight: 300, minHeight: 80),
+          constraints: const BoxConstraints(maxHeight: 300, minHeight: 50),
           padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
           child: Visibility(
               visible: _isRecording,

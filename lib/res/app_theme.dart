@@ -20,9 +20,11 @@ ThemeData lightTheme = ThemeData(
 ThemeData darkTheme = ThemeData(
   fontFamily: 'Tajawal',
   useMaterial3: true,
-  primarySwatch: Constants.primaryColor,
+  // primarySwatch: Constants.darkColor,
   cardColor: Constants.darkColor,
-  colorScheme: const ColorScheme.dark(),
+  colorScheme: const ColorScheme.dark(
+    primary: Constants.darkColor,
+  ),
   appBarTheme: const AppBarTheme(
     backgroundColor: Color(0xFF14213d),
     titleTextStyle: TextStyle(

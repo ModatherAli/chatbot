@@ -46,12 +46,10 @@ class _UserTextFieldState extends State<UserTextField> {
   Widget build(BuildContext context) {
     return GetBuilder<SettingsController>(builder: (themeController) {
       return Card(
-        // color: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
         child: Container(
-          // height: 50,
           decoration: BoxDecoration(
-            // color: themeController.isDark ? Constants.darkColor : Colors.white,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(7),
           ),
           child: Row(
@@ -71,7 +69,6 @@ class _UserTextFieldState extends State<UserTextField> {
                       maxLines: null,
                       decoration: const InputDecoration(
                         border: UnderlineInputBorder(
-                          // borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(
                             width: 0,
                             style: BorderStyle.none,
