@@ -11,13 +11,12 @@ String messageModuleToJson(Message data) => json.encode(data.toJson());
 
 class Message {
   Message({
+    required this.id,
     required this.message,
-    this.isImage = false,
     this.isAI = false,
   });
-
-  final StringBuffer message;
-  final bool isImage;
+  final dynamic id;
+  final dynamic message;
   final bool isAI;
 
   // factory MessageModule.fromJson(Map<String, dynamic> json) => MessageModule(
@@ -28,7 +27,6 @@ class Message {
 
   Map<String, dynamic> toJson() => {
         "message": message,
-        "is_image": isImage,
         "is_ai": isAI,
       };
 }

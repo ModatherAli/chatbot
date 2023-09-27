@@ -1,35 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../controller/theme_controller.dart';
-import '../../modules/message.dart';
-import '../../res/constants.dart';
-import 'dropdown_options.dart';
+import '../../../controller/theme_controller.dart';
+import '../../../modules/message.dart';
+import '../../widgets/widgets.dart';
 
-class UserMessage extends StatelessWidget {
-  const UserMessage({super.key, required this.messageModule});
+class AIMessage extends StatelessWidget {
+  const AIMessage({
+    super.key,
+    required this.messageModule,
+  });
   final Message messageModule;
+
   @override
   Widget build(BuildContext context) {
-    return DropdownOptions(
-      messageModule: messageModule,
-      child: GetBuilder<SettingsController>(builder: (themeController) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+    return GetBuilder<SettingsController>(builder: (themeController) {
+      return DropdownOptions(
+        messageModule: messageModule,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
-              margin: const EdgeInsets.all(15),
               padding: const EdgeInsets.all(15),
               constraints: BoxConstraints(
                 maxWidth: Get.width * 0.85,
               ),
               decoration: BoxDecoration(
-                color: Constants.primaryColor,
+                color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.only(
-                  topRight: themeController.appLocal != 'en'
+                  topRight: themeController.appLocal == 'en'
                       ? const Radius.circular(15)
                       : Radius.zero,
-                  topLeft: themeController.appLocal == 'en'
+                  topLeft: themeController.appLocal != 'en'
                       ? const Radius.circular(15)
                       : Radius.zero,
                   bottomLeft: const Radius.circular(15),
@@ -41,13 +43,12 @@ class UserMessage extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
-                  color: Colors.white,
                 ),
               ),
             ),
           ],
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 }

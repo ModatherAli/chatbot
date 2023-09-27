@@ -1,6 +1,7 @@
 import 'package:get/get_state_manager/get_state_manager.dart';
 
 import '../modules/message.dart';
+import '../services/api/chat_services.dart';
 import '../services/sql/sqflite_database.dart';
 
 class ChatController extends GetxController {
@@ -23,7 +24,25 @@ class ChatController extends GetxController {
         "INSERT INTO 'Messages' ('message', 'is_image', 'is_ai') VALUES('$message','$isImage','$isAI')");
   }
 
-  saveUserMessage() async {}
+  onUserSendMessage(String text) async {
+    Message message = Message(
+      message: text,
+      id: DateTime.now().millisecondsSinceEpoch,
+    );
+    chatMessage.add(message);
+    update();
+  }
+
+  onAISendMessage(String text) async {
+    String msg = await ChatServices.receiveMessageFromAI(text);
+    Message message = Message(
+      message: 'AI',
+      id: DateTime.now().millisecondsSinceEpoch,
+      isAI: true,
+    );
+    chatMessage.add(message);
+    update();
+  }
 
   //   _getMessage() async {
   //   Message messageModule;

@@ -18,8 +18,7 @@ class SelectableListTile extends StatelessWidget {
         child: ListTile(
           onTap: onTap,
           // selected: isActive,
-          // tileColor:
-          //     themeController.isDark ? Constants.darkColor : Colors.white,
+          tileColor: Theme.of(context).cardColor,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           title: Text(title.tr),

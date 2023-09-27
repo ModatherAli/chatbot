@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 
 import '../../controller/chat_controller.dart';
 import '../../controller/theme_controller.dart';
-import '../../modules/message.dart';
 import '../../packages.dart';
 import '../settings/settings_screen.dart';
 import '../widgets/widgets.dart';
@@ -25,6 +24,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final SpeechToText _speechToText = SpeechToText();
 
   final ScrollController _scrollController = ScrollController();
+
   bool _aiIsWriting = false;
   bool _isRecording = false;
   bool _showRecording = false;
@@ -32,35 +32,18 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _speechInit = false;
   String _lastWords = '';
 
-  final List<Message> _chatMessage = [];
   Future _sendMessage(String msg) async {
-    Message messageModule;
-    StringBuffer stringBuffer = StringBuffer();
-    stringBuffer.write(msg);
-    messageModule = Message(
-      message: stringBuffer,
-      isAI: false,
-    );
-    _scrollController.jumpTo(0);
-    _chatMessage.add(messageModule);
     setState(() {
       _textController.clear();
       _aiIsWriting = true;
     });
-    await _receiveMessage(msg);
+
+    await _chatController.onUserSendMessage(msg);
+    await _chatController.onAISendMessage(msg);
+
     setState(() {
       _aiIsWriting = false;
     });
-  }
-
-  Future _receiveMessage(String msg) async {
-    _chatMessage.add(
-      Message(
-        message: StringBuffer(),
-        isAI: true,
-      ),
-    );
-    setState(() {});
   }
 
   /// This has to happen only once per app
@@ -122,20 +105,22 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ],
       ),
-      body: Stack(
-        children: [
-          ListView(
-            padding:
-                EdgeInsets.only(bottom: _showRecording ? 270 : 120, top: 10),
-            reverse: true,
-            controller: _scrollController,
-            children: [
-              Visibility(visible: _aiIsWriting, child: const AIWriting()),
-              ChatMessagesList(messages: _chatController.chatMessage),
-            ],
-          ),
-        ],
-      ),
+      body: GetBuilder<ChatController>(builder: (_) {
+        return Stack(
+          children: [
+            ListView(
+              padding:
+                  EdgeInsets.only(bottom: _showRecording ? 270 : 120, top: 10),
+              reverse: true,
+              controller: _scrollController,
+              children: [
+                Visibility(visible: _aiIsWriting, child: const AIWriting()),
+                ChatMessagesList(messages: _chatController.chatMessage),
+              ],
+            ),
+          ],
+        );
+      }),
       bottomSheet: GetBuilder<SettingsController>(builder: (themeController) {
         return AnimatedContainer(
           color: Theme.of(context).scaffoldBackgroundColor,
@@ -164,7 +149,6 @@ class _ChatScreenState extends State<ChatScreen> {
                   onSendText: () async {
                     await _sendMessage(_textController.text);
                   },
-                  onPressImage: () {},
                 ),
               ),
               child: MicView(

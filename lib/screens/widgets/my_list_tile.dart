@@ -21,8 +21,7 @@ class MyListTile extends StatelessWidget {
         padding: const EdgeInsets.only(top: 10),
         child: ListTile(
           onTap: onTap,
-          // tileColor:
-          //     themeController.isDark ? Constants.darkColor : Colors.white,
+          tileColor: Theme.of(context).cardColor,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           leading: Icon(iconData),

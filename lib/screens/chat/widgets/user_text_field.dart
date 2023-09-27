@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
-import '../../controller/theme_controller.dart';
-import '../../res/constants.dart';
+import '../../../controller/theme_controller.dart';
+import '../../../res/constants.dart';
 
 class UserTextField extends StatefulWidget {
   const UserTextField({
@@ -92,14 +92,14 @@ class _UserTextFieldState extends State<UserTextField> {
                   color: Constants.primaryColor,
                 ),
               ),
-              Visibility(
-                visible: widget.textController.text.isNotEmpty,
-                child: IconButton(
-                  onPressed: widget.onPressImage,
-                  icon: const Icon(Icons.image),
-                  color: Constants.primaryColor,
-                ),
-              ),
+              // Visibility(
+              //   visible: widget.textController.text.isNotEmpty,
+              //   child: IconButton(
+              //     onPressed: widget.onPressImage,
+              //     icon: const Icon(Icons.image),
+              //     color: Constants.primaryColor,
+              //   ),
+              // ),
             ],
           ),
         ),

@@ -1,11 +1,11 @@
-export 'ai_message.dart';
-export 'ai_writing.dart';
+export '../chat/widgets/ai_message.dart';
+export '../chat/widgets/ai_writing.dart';
+export '../chat/widgets/user_message.dart';
+export '../chat/widgets/user_text_field.dart';
 export 'dropdown_options.dart';
 export 'mic_view.dart';
 export 'my_list_tile.dart';
 export 'selectable_list_tile.dart';
 export 'shake_animation.dart';
 export 'typing_text.dart';
-export 'user_message.dart';
-export 'user_text_field.dart';
 export 'widgets_collection.dart';
