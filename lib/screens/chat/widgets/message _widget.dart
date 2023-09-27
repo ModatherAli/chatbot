@@ -11,12 +11,14 @@ class MessageWidget extends StatelessWidget {
   final String text;
   final MainAxisAlignment alignment;
   final Color color;
+  final Color? textColor;
   final BorderRadius borderRadius;
   const MessageWidget({
     super.key,
     required this.text,
     this.alignment = MainAxisAlignment.end,
     this.color = Constants.primaryColor,
+    this.textColor,
     required this.borderRadius,
   });
 
@@ -57,10 +59,10 @@ class MessageWidget extends StatelessWidget {
               ),
               child: Text(
                 text,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
-                  color: Colors.white,
+                  color: textColor,
                 ),
               ),
             ),

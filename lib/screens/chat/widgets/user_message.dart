@@ -13,6 +13,7 @@ class UserMessage extends StatelessWidget {
     return GetBuilder<SettingsController>(builder: (settingsController) {
       return MessageWidget(
           text: message,
+          textColor: Colors.white,
           borderRadius: BorderRadius.only(
             topRight: settingsController.appLocal != 'en'
                 ? const Radius.circular(15)
