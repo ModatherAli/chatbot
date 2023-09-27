@@ -33,10 +33,10 @@ class ChatController extends GetxController {
     update();
   }
 
-  onAISendMessage(String text) async {
+  Future onAISendMessage(String text) async {
     String msg = await ChatServices.receiveMessageFromAI(text);
     Message message = Message(
-      message: 'AI',
+      message: msg,
       id: DateTime.now().millisecondsSinceEpoch,
       isAI: true,
     );

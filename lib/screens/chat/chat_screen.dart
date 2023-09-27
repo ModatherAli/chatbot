@@ -47,13 +47,13 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   /// This has to happen only once per app
-  void _initSpeech() async {
+  Future _initSpeech() async {
     _speechInit = await _speechToText.initialize();
     setState(() {});
   }
 
   /// Each time to start a speech recognition session
-  void _startListening(String localeId) async {
+  Future _startListening(String localeId) async {
     await _speechToText.listen(
       onResult: _onSpeechResult,
       // listenMode: ListenMode.dictation,
@@ -63,7 +63,7 @@ class _ChatScreenState extends State<ChatScreen> {
     setState(() {});
   }
 
-  void _stopListening() async {
+  Future _stopListening() async {
     await _speechToText.stop();
     setState(() {});
   }
@@ -106,24 +106,20 @@ class _ChatScreenState extends State<ChatScreen> {
         ],
       ),
       body: GetBuilder<ChatController>(builder: (_) {
-        return Stack(
+        return ListView(
+          padding: EdgeInsets.only(bottom: _showRecording ? 270 : 80, top: 10),
+          reverse: true,
+          controller: _scrollController,
           children: [
-            ListView(
-              padding:
-                  EdgeInsets.only(bottom: _showRecording ? 270 : 120, top: 10),
-              reverse: true,
-              controller: _scrollController,
-              children: [
-                Visibility(visible: _aiIsWriting, child: const AIWriting()),
-                ChatMessagesList(messages: _chatController.chatMessage),
-              ],
-            ),
+            Visibility(visible: _aiIsWriting, child: const AIWriting()),
+            ChatMessagesList(messages: _chatController.chatMessage),
           ],
         );
       }),
       bottomSheet: GetBuilder<SettingsController>(builder: (themeController) {
         return AnimatedContainer(
           color: Theme.of(context).scaffoldBackgroundColor,
+          curve: Curves.bounceOut,
           duration: const Duration(milliseconds: 500),
           onEnd: () {
             setState(() {
@@ -158,22 +154,20 @@ class _ChatScreenState extends State<ChatScreen> {
                 speechEnabled: _speechToText.isListening,
                 onRecord: () async {
                   _speechEnabled = !_speechEnabled;
-                  if (_speechInit) {
-                    if (_speechToText.isNotListening) {
-                      _startListening(themeController.voiceLocal);
-                    } else {
-                      _stopListening();
-                    }
+                  if (!_speechInit) {
+                    await _initSpeech();
+                  }
+                  if (_speechToText.isNotListening) {
+                    await _startListening(themeController.voiceLocal);
                   } else {
-                    _initSpeech();
+                    await _stopListening();
                   }
 
                   setState(() {});
                 },
                 onKeyboardPressed: () {
-                  setState(() {
-                    _isRecording = false;
-                  });
+                  _isRecording = false;
+                  setState(() {});
                 },
               )),
         );
