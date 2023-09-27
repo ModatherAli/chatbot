@@ -13,7 +13,7 @@ class UserMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return DropdownOptions(
       messageModule: messageModule,
-      child: GetBuilder<ThemeController>(builder: (themeController) {
+      child: GetBuilder<SettingsController>(builder: (themeController) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -26,10 +26,10 @@ class UserMessage extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Constants.primaryColor,
                 borderRadius: BorderRadius.only(
-                  topRight: themeController.local != 'en'
+                  topRight: themeController.appLocal != 'en'
                       ? const Radius.circular(15)
                       : Radius.zero,
-                  topLeft: themeController.local == 'en'
+                  topLeft: themeController.appLocal == 'en'
                       ? const Radius.circular(15)
                       : Radius.zero,
                   bottomLeft: const Radius.circular(15),

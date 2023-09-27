@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../controller/theme_controller.dart';
-import '../../res/constants.dart';
 
 class MyListTile extends StatelessWidget {
   const MyListTile({
@@ -17,13 +16,13 @@ class MyListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ThemeController>(builder: (themeController) {
+    return GetBuilder<SettingsController>(builder: (themeController) {
       return Padding(
         padding: const EdgeInsets.only(top: 10),
         child: ListTile(
           onTap: onTap,
-          tileColor:
-              themeController.isDark ? Constants.darkColor : Colors.white,
+          // tileColor:
+          //     themeController.isDark ? Constants.darkColor : Colors.white,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           leading: Icon(iconData),

@@ -9,7 +9,7 @@ import 'controller/theme_controller.dart';
 import 'res/app_locale.dart';
 import 'res/app_theme.dart';
 import 'screens/chat_screen.dart';
-import 'screens/local_screen.dart';
+import 'screens/settings/local_screen.dart';
 
 late SharedPreferences sharedPreferences;
 void main() async {
@@ -30,8 +30,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final ThemeController _themeController =
-      Get.put(ThemeController(), permanent: true);
+  final SettingsController _settingsController =
+      Get.put(SettingsController(), permanent: true);
   bool showSplash = true;
   // final InAppReview inAppReview = InAppReview.instance;
 
@@ -44,7 +44,7 @@ class _MyAppState extends State<MyApp> {
   _setServices() async {
     // _appReview();
 
-    _themeController.init();
+    _settingsController.init();
     setState(() {});
   }
 
@@ -57,16 +57,16 @@ class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ThemeController>(builder: (themeController) {
+    return GetBuilder<SettingsController>(builder: (themeController) {
       return GetMaterialApp(
         title: 'Chatbot',
         theme: lightTheme,
         darkTheme: darkTheme,
-        themeMode: _themeController.isDark ? ThemeMode.dark : ThemeMode.light,
+        themeMode: _settingsController.getThemeMode(),
         initialBinding: ControllerBindings(),
-        locale: Locale(_themeController.local),
+        locale: Locale(_settingsController.appLocal),
         translations: AppLocale(),
-        home: _themeController.isLocalNull
+        home: _settingsController.isLocalNull
             ? const LocalScreen()
             : const ChatScreen(),
         builder: EasyLoading.init(),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../controller/theme_controller.dart';
-import 'widgets/widgets.dart';
+import '../../controller/theme_controller.dart';
+import '../widgets/widgets.dart';
 
 class ThemeScreen extends StatefulWidget {
   const ThemeScreen({super.key});
@@ -12,13 +12,11 @@ class ThemeScreen extends StatefulWidget {
 }
 
 class _ThemeScreenState extends State<ThemeScreen> {
-  bool _isDark = true;
-
-  final ThemeController _themeController =
-      Get.put(ThemeController(), permanent: true);
+  final SettingsController _settingsController = Get.find();
+  late ThemeMode _themeMode;
   @override
   void initState() {
-    _isDark = _themeController.isDark;
+    _themeMode = _settingsController.getThemeMode();
     super.initState();
   }
 
@@ -33,27 +31,33 @@ class _ThemeScreenState extends State<ThemeScreen> {
         children: [
           SelectableListTile(
             title: 'On',
-            isActive: _isDark,
+            isActive: _themeMode == ThemeMode.dark,
             onTap: () async {
-              _isDark = true;
-
-              await _themeController.changeThemeMode(_isDark);
-              // _themeController.changeLang('ar');
-              setState(() {});
+              _updateTheme(ThemeMode.dark);
             },
           ),
           SelectableListTile(
             title: 'Off',
-            isActive: !_isDark,
+            isActive: _themeMode == ThemeMode.light,
             onTap: () async {
-              _isDark = false;
-
-              await _themeController.changeThemeMode(_isDark);
-              setState(() {});
+              _updateTheme(ThemeMode.light);
+            },
+          ),
+          SelectableListTile(
+            title: 'System',
+            isActive: _themeMode == ThemeMode.system,
+            onTap: () {
+              _updateTheme(ThemeMode.system);
             },
           ),
         ],
       ),
     );
+  }
+
+  void _updateTheme(ThemeMode theme) async {
+    _themeMode = theme;
+    await _settingsController.changeThemeMode(_themeMode);
+    setState(() {});
   }
 }

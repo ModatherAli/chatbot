@@ -7,8 +7,7 @@ import '../controller/message_controller.dart';
 import '../controller/theme_controller.dart';
 import '../modules/message_module.dart';
 import '../packages.dart';
-import '../res/constants.dart';
-import 'settings_screen.dart';
+import 'settings/settings_screen.dart';
 import 'widgets/widgets.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -33,7 +32,7 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _speechEnabled = false;
   bool _speechInit = false;
   String _lastWords = '';
-  final ThemeController _themeController = Get.find();
+  final SettingsController _themeController = Get.find();
 
   Future _sendMessage(
     String msg, {
@@ -54,7 +53,6 @@ class _ChatScreenState extends State<ChatScreen> {
     });
     await _messageController.insertQRDate(message: msg);
     await _receiveMessage(msg, isImage);
-    _themeController.updateFreeMessageCounter();
     setState(() {
       _aiIsWriting = false;
     });
@@ -238,7 +236,7 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ],
       ),
-      bottomSheet: GetBuilder<ThemeController>(builder: (themeController) {
+      bottomSheet: GetBuilder<SettingsController>(builder: (themeController) {
         // _showRecording = _isRecording;
         return AnimatedContainer(
           duration: const Duration(milliseconds: 500),
@@ -247,9 +245,7 @@ class _ChatScreenState extends State<ChatScreen> {
               _showRecording = _isRecording;
             });
           },
-          color: themeController.isDark
-              ? Constants.primaryDarkColor
-              : Colors.grey.shade100,
+
           height: _isRecording ? 250 : null,
           constraints: const BoxConstraints(maxHeight: 300, minHeight: 80),
           //     : _purchasesController.isVIP

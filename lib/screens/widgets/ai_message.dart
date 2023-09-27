@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 
 import '../../controller/theme_controller.dart';
 import '../../modules/message_module.dart';
-import '../../res/constants.dart';
 import 'widgets.dart';
 
 class AIMessage extends StatelessWidget {
@@ -17,7 +16,7 @@ class AIMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ThemeController>(builder: (themeController) {
+    return GetBuilder<SettingsController>(builder: (themeController) {
       return DropdownOptions(
         messageModule: messageModule,
         child: Row(
@@ -29,13 +28,13 @@ class AIMessage extends StatelessWidget {
                 maxWidth: Get.width * 0.85,
               ),
               decoration: BoxDecoration(
-                color:
-                    themeController.isDark ? Constants.darkColor : Colors.white,
+                // color:
+                //     themeController.isDark ? Constants.darkColor : Colors.white,
                 borderRadius: BorderRadius.only(
-                  topRight: themeController.local == 'en'
+                  topRight: themeController.appLocal == 'en'
                       ? const Radius.circular(15)
                       : Radius.zero,
-                  topLeft: themeController.local != 'en'
+                  topLeft: themeController.appLocal != 'en'
                       ? const Radius.circular(15)
                       : Radius.zero,
                   bottomLeft: const Radius.circular(15),

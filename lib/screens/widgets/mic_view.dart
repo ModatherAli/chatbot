@@ -25,10 +25,10 @@ class MicView extends StatefulWidget {
 class _MicViewState extends State<MicView> {
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ThemeController>(builder: (themeController) {
+    return GetBuilder<SettingsController>(builder: (themeController) {
       return Card(
         child: Container(
-          color: themeController.isDark ? Constants.darkColor : Colors.white,
+          // color: themeController.isDark ? Constants.darkColor : Colors.white,
           child: Padding(
             padding: const EdgeInsets.all(5.0),
             child: Column(

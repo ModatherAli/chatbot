@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../controller/theme_controller.dart';
-import '../../res/constants.dart';
 
 class AIWriting extends StatefulWidget {
   const AIWriting({super.key});
@@ -16,8 +15,8 @@ class _AIWritingState extends State<AIWriting>
   String typingImage = '';
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ThemeController>(builder: (themeController) {
-      if (themeController.isDark) {
+    return GetBuilder<SettingsController>(builder: (settingsController) {
+      if (settingsController.getThemeMode() == ThemeMode.dark) {
         typingImage = 'assets/images/typing_dark.gif';
       } else {
         typingImage = 'assets/images/typing.gif';
@@ -38,13 +37,13 @@ class _AIWritingState extends State<AIWriting>
                 image: AssetImage(typingImage),
                 fit: BoxFit.cover,
               ),
-              color:
-                  themeController.isDark ? Constants.darkColor : Colors.white,
+              // color:
+              //     settingsController.isDark ? Constants.darkColor : Colors.white,
               borderRadius: BorderRadius.only(
-                topRight: themeController.local == 'en'
+                topRight: settingsController.appLocal == 'en'
                     ? const Radius.circular(15)
                     : Radius.zero,
-                topLeft: themeController.local != 'en'
+                topLeft: settingsController.appLocal != 'en'
                     ? const Radius.circular(15)
                     : Radius.zero,
                 bottomLeft: const Radius.circular(15),

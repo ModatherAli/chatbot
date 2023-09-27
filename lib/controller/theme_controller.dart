@@ -1,58 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../main.dart';
-import '../res/app_theme.dart';
 
-class ThemeController extends GetxController {
-  bool isDark = false;
+class SettingsController extends GetxController {
+  late SharedPreferences _sharedPreferences;
+  bool? isDark;
   bool isLocalNull = false;
-  String local = 'ar';
+  String appLocal = 'ar';
   String voiceLocal = 'ar';
   int freeMessagesCunter = 0;
   bool isFirstImage = true;
-  Future<ThemeController> init() async {
-    // Get.deviceLocale
-    isDark = sharedPreferences.getBool('theme_mode') ?? false;
-    isFirstImage = sharedPreferences.getBool('is_first_image') ?? true;
-    //     ThemeMode.system == ThemeMode.light
-    // ? false
-    // : true;
-    if (sharedPreferences.getString('local') != null) {
-      local = sharedPreferences.getString('local')!;
-    } else {
-      isLocalNull = true;
-    }
 
-    voiceLocal = sharedPreferences.getString('voice_local') ?? 'ar';
-    freeMessagesCunter = sharedPreferences.getInt('free_msg') ?? 3;
-    return this;
-  }
-
-  updateImage() {
-    if (!isFirstImage) {
-      isFirstImage = false;
-      sharedPreferences.setBool('is_first_image', false);
-      update();
-    }
-  }
-
-  Future changeThemeMode(bool isDarkMode) async {
-    if (isDarkMode) {
-      Get.changeTheme(darkTheme);
-    } else {
-      Get.changeTheme(lightTheme);
-    }
-    isDark = isDarkMode;
-    await sharedPreferences.setBool('theme_mode', isDarkMode);
+  Future init() async {
+    _sharedPreferences = await SharedPreferences.getInstance();
+    isDark = _sharedPreferences.getBool('theme_mode');
+    _getAppLocal();
     update();
+  }
+
+  _getAppLocal() async {
+    String? localCode = _sharedPreferences.getString('app_local');
+    if (localCode != null) {
+      appLocal = localCode;
+      // Logger.print(appLocal);
+    } else if (Get.deviceLocale != null) {
+      appLocal = Get.deviceLocale!.languageCode == 'ar' ? 'ar' : 'en';
+    }
+    voiceLocal = sharedPreferences.getString('voice_local') ?? appLocal;
+    update();
+    await Get.updateLocale(Locale(appLocal));
   }
 
   Future changeLang(String langCode) async {
     Locale newLocale = Locale(langCode);
-    local = langCode;
+    appLocal = langCode;
+
+    await _sharedPreferences.setString('app_local', langCode);
     await Get.updateLocale(newLocale);
-    await sharedPreferences.setString('local', langCode);
     update();
   }
 
@@ -62,18 +48,39 @@ class ThemeController extends GetxController {
     update();
   }
 
-  updateFreeMessageCounter() {
-    if (freeMessagesCunter > 0) {
-      freeMessagesCunter--;
-      sharedPreferences.setInt('free_msg', freeMessagesCunter);
+  Future changeThemeMode(ThemeMode themeMode) async {
+    switch (themeMode) {
+      case ThemeMode.system:
+        isDark = null;
+        await _sharedPreferences.remove('theme_mode');
+        break;
+      case ThemeMode.dark:
+        isDark = true;
+        break;
+      case ThemeMode.light:
+        isDark = false;
+        break;
+      default:
     }
+
+    Get.changeThemeMode(themeMode);
+    if (isDark != null) {
+      await _sharedPreferences.setBool('theme_mode', isDark!);
+    }
+
     update();
   }
 
-  getMoreFreeMessageCounter() async {
-    freeMessagesCunter += 3;
-    await sharedPreferences.setInt('free_msg', freeMessagesCunter);
+  ThemeMode getThemeMode() {
+    switch (isDark) {
+      case null:
+        return ThemeMode.system;
 
-    update();
+      case true:
+        return ThemeMode.dark;
+
+      default:
+        return ThemeMode.light;
+    }
   }
 }

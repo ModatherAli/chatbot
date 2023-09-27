@@ -44,14 +44,14 @@ class _UserTextFieldState extends State<UserTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ThemeController>(builder: (themeController) {
+    return GetBuilder<SettingsController>(builder: (themeController) {
       return Card(
         // color: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
         child: Container(
           // height: 50,
           decoration: BoxDecoration(
-            color: themeController.isDark ? Constants.darkColor : Colors.white,
+            // color: themeController.isDark ? Constants.darkColor : Colors.white,
             borderRadius: BorderRadius.circular(7),
           ),
           child: Row(

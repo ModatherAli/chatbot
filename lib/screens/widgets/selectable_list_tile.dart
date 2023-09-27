@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../controller/theme_controller.dart';
-import '../../res/constants.dart';
 
 class SelectableListTile extends StatelessWidget {
   const SelectableListTile(
@@ -13,14 +12,14 @@ class SelectableListTile extends StatelessWidget {
   final void Function()? onTap;
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ThemeController>(builder: (themeController) {
+    return GetBuilder<SettingsController>(builder: (themeController) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListTile(
           onTap: onTap,
           // selected: isActive,
-          tileColor:
-              themeController.isDark ? Constants.darkColor : Colors.white,
+          // tileColor:
+          //     themeController.isDark ? Constants.darkColor : Colors.white,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           title: Text(title.tr),

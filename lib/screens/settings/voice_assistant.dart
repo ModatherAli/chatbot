@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../controller/theme_controller.dart';
-import 'widgets/selectable_list_tile.dart';
+import '../../controller/theme_controller.dart';
+import '../widgets/selectable_list_tile.dart';
 
 class VoiceAssistant extends StatefulWidget {
   const VoiceAssistant({super.key});
@@ -28,8 +28,8 @@ class _VoiceAssistantState extends State<VoiceAssistant> {
     'Українська мова': 'uk',
     'русский язык': 'ru',
   };
-  final ThemeController _themeController =
-      Get.put(ThemeController(), permanent: true);
+  final SettingsController _themeController =
+      Get.put(SettingsController(), permanent: true);
   @override
   void initState() {
     super.initState();

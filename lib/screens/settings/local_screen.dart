@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../controller/theme_controller.dart';
-import 'chat_screen.dart';
-import 'widgets/widgets.dart';
+import '../../controller/theme_controller.dart';
+import '../chat_screen.dart';
+import '../widgets/widgets.dart';
 
 class LocalScreen extends StatefulWidget {
   const LocalScreen({super.key});
@@ -15,11 +15,11 @@ class LocalScreen extends StatefulWidget {
 class _LocalScreenState extends State<LocalScreen> {
   bool _isEn = true;
   String _local = 'ar';
-  final ThemeController _themeController =
-      Get.put(ThemeController(), permanent: true);
+  final SettingsController _themeController =
+      Get.put(SettingsController(), permanent: true);
   @override
   void initState() {
-    _isEn = _themeController.local == 'en';
+    _isEn = _themeController.appLocal == 'en';
     super.initState();
   }
 
@@ -61,7 +61,7 @@ class _LocalScreenState extends State<LocalScreen> {
               setState(() {});
             },
           ),
-          SizedBox(height: 25),
+          const SizedBox(height: 25),
           Visibility(
             visible: _themeController.isLocalNull,
             child: ElevatedButton.icon(
@@ -69,7 +69,7 @@ class _LocalScreenState extends State<LocalScreen> {
                 _themeController.changeLang(_local);
                 Get.offAll(() => const ChatScreen());
               },
-              icon: Icon(Icons.login),
+              icon: const Icon(Icons.login),
               label: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Text('CONTINUE'.tr),

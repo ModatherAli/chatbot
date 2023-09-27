@@ -7,6 +7,6 @@ class ControllerBindings implements Bindings {
   @override
   void dependencies() {
     Get.put(MessageController(), permanent: true);
-    Get.put(ThemeController(), permanent: true);
+    Get.put(SettingsController(), permanent: true);
   }
 }
