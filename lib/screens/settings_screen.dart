@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../constants.dart';
 import '../helper/helper_services.dart';
+import '../res/constants.dart';
 import 'local_screen.dart';
 import 'theme_screen.dart';
 import 'voice_assistant.dart';

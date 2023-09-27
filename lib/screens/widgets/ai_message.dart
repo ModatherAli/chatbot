@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../constants.dart';
 import '../../controller/theme_controller.dart';
 import '../../modules/message_module.dart';
+import '../../res/constants.dart';
 import 'widgets.dart';
 
 class AIMessage extends StatelessWidget {

@@ -12,7 +12,6 @@ class VoiceAssistant extends StatefulWidget {
 }
 
 class _VoiceAssistantState extends State<VoiceAssistant> {
-  bool _isEn = true;
   final Map _langLocal = {
     'عربي': 'ar',
     'English': 'en',
@@ -33,7 +32,6 @@ class _VoiceAssistantState extends State<VoiceAssistant> {
       Get.put(ThemeController(), permanent: true);
   @override
   void initState() {
-    _isEn = _themeController.local == 'en';
     super.initState();
   }
 

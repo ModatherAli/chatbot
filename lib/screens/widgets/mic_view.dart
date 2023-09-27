@@ -2,8 +2,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../constants.dart';
 import '../../controller/theme_controller.dart';
+import '../../res/constants.dart';
 
 class MicView extends StatefulWidget {
   final bool speechEnabled;

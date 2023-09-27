@@ -3,11 +3,11 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
-import '../constants.dart';
 import '../controller/message_controller.dart';
 import '../controller/theme_controller.dart';
 import '../modules/message_module.dart';
 import '../packages.dart';
+import '../res/constants.dart';
 import 'settings_screen.dart';
 import 'widgets/widgets.dart';
 
