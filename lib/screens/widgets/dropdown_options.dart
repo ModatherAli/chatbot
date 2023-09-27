@@ -4,13 +4,13 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../../modules/message_module.dart';
+import '../../modules/message.dart';
 
 class DropdownOptions extends StatelessWidget {
   const DropdownOptions(
       {super.key, required this.child, required this.messageModule});
   final Widget child;
-  final MessageModule messageModule;
+  final Message messageModule;
   @override
   Widget build(BuildContext context) {
     return Padding(

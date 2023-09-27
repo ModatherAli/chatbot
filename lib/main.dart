@@ -8,7 +8,7 @@ import 'controller/controllers_bindings.dart';
 import 'controller/theme_controller.dart';
 import 'res/app_locale.dart';
 import 'res/app_theme.dart';
-import 'screens/chat_screen.dart';
+import 'screens/chat/chat_screen.dart';
 import 'screens/settings/local_screen.dart';
 
 late SharedPreferences sharedPreferences;

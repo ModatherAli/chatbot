@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../controller/theme_controller.dart';
-import '../../modules/message_module.dart';
+import '../../modules/message.dart';
 import 'widgets.dart';
 
 class AIMessage extends StatelessWidget {
@@ -11,7 +11,7 @@ class AIMessage extends StatelessWidget {
     required this.messageModule,
     // this.isTyping = true,
   });
-  final MessageModule messageModule;
+  final Message messageModule;
   // final bool isTyping;
 
   @override

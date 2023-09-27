@@ -7,10 +7,10 @@ import 'dart:convert';
 // MessageModule messageModuleFromJson(String str) =>
 //     MessageModule.fromJson(json.decode(str));
 
-String messageModuleToJson(MessageModule data) => json.encode(data.toJson());
+String messageModuleToJson(Message data) => json.encode(data.toJson());
 
-class MessageModule {
-  MessageModule({
+class Message {
+  Message({
     required this.message,
     this.isImage = false,
     this.isAI = false,

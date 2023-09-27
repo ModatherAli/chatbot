@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../controller/theme_controller.dart';
-import '../chat_screen.dart';
+import '../chat/chat_screen.dart';
 import '../widgets/widgets.dart';
 
 class LocalScreen extends StatefulWidget {

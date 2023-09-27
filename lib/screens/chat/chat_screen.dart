@@ -3,12 +3,13 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
-import '../controller/message_controller.dart';
-import '../controller/theme_controller.dart';
-import '../modules/message_module.dart';
-import '../packages.dart';
-import 'settings/settings_screen.dart';
-import 'widgets/widgets.dart';
+import '../../controller/chat_controller.dart';
+import '../../controller/theme_controller.dart';
+import '../../modules/message.dart';
+import '../../packages.dart';
+import '../settings/settings_screen.dart';
+import '../widgets/widgets.dart';
+import 'widgets/chat_messages_list.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -19,12 +20,12 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _textController = TextEditingController();
-  final MessageController _messageController =
-      Get.put(MessageController(), permanent: true);
+  final ChatController _messageController =
+      Get.put(ChatController(), permanent: true);
 
   final SpeechToText _speechToText = SpeechToText();
-  final List<MessageModule> _chatMessage = [];
-  final List<MessageModule> _savedChatMessage = [];
+  final List<Message> _newMessages = [];
+  final List<Message> _savedChatMessage = [];
   final ScrollController _scrollController = ScrollController();
   bool _aiIsWriting = false;
   bool _isRecording = false;
@@ -32,34 +33,31 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _speechEnabled = false;
   bool _speechInit = false;
   String _lastWords = '';
-  final SettingsController _themeController = Get.find();
+  // final SettingsController _themeController = Get.find();
 
-  Future _sendMessage(
-    String msg, {
-    bool isImage = false,
-  }) async {
-    MessageModule messageModule;
+  Future _sendMessage(String msg) async {
+    Message messageModule;
     StringBuffer stringBuffer = StringBuffer();
     stringBuffer.write(msg);
-    messageModule = MessageModule(
+    messageModule = Message(
       message: stringBuffer,
       isAI: false,
     );
     _scrollController.jumpTo(0);
-    _chatMessage.add(messageModule);
+    _newMessages.add(messageModule);
     setState(() {
       _textController.clear();
       _aiIsWriting = true;
     });
     await _messageController.insertQRDate(message: msg);
-    await _receiveMessage(msg, isImage);
+    await _receiveMessage(msg, false);
     setState(() {
       _aiIsWriting = false;
     });
   }
 
   _receiveMessage(String msg, bool isImage) async {
-    MessageModule messageModule;
+    Message messageModule;
     Map<String, dynamic> response = {};
     // await _openAiAPI.sendMessage(messageText: msg, wantsImage: isImage);
 
@@ -68,13 +66,13 @@ class _ChatScreenState extends State<ChatScreen> {
     if (isImage) {
       log(response['data'][0]['url']);
       stringBuffer.write(response['data'][0]['url']);
-      messageModule = MessageModule(
+      messageModule = Message(
         message: stringBuffer,
         isAI: true,
         isImage: true,
       );
 
-      _chatMessage.add(messageModule);
+      _newMessages.add(messageModule);
       await _messageController.insertQRDate(
         message: messageModule.message.toString().trim(),
         isAI: 1,
@@ -86,8 +84,8 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future _sendChatMessage(String msg) async {
-    _chatMessage.add(
-      MessageModule(
+    _newMessages.add(
+      Message(
         message: StringBuffer(),
         isAI: true,
       ),
@@ -129,28 +127,28 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   _getMessage() async {
-    MessageModule messageModule;
+    Message messageModule;
 
     StringBuffer stringBuffer = StringBuffer();
     stringBuffer.write('Hi. You can ask me anything'.tr);
-    messageModule = MessageModule(
+    messageModule = Message(
       isAI: true,
       message: stringBuffer,
     );
-    _chatMessage.add(messageModule);
+    _newMessages.add(messageModule);
     setState(() {});
     await _messageController.readData();
     for (var message in _messageController.messages) {
       StringBuffer buffer = StringBuffer();
       buffer.write(message['message'].toString());
       if (message['is_ai'] == 1) {
-        messageModule = MessageModule(
+        messageModule = Message(
           isAI: true,
           isImage: message['is_image'] == 1,
           message: buffer,
         );
       } else {
-        messageModule = MessageModule(
+        messageModule = Message(
           isAI: false,
           message: buffer,
         );
@@ -202,42 +200,13 @@ class _ChatScreenState extends State<ChatScreen> {
             controller: _scrollController,
             children: [
               Visibility(visible: _aiIsWriting, child: const AIWriting()),
-              ListView.builder(
-                itemCount: _chatMessage.length,
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  if (_chatMessage[index].isAI) {
-                    return AIMessage(
-                      messageModule: _chatMessage[index],
-                    );
-                  }
-                  return UserMessage(
-                    messageModule: _chatMessage[index],
-                  );
-                },
-              ),
-              ListView.builder(
-                itemCount: _savedChatMessage.length,
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  if (_savedChatMessage[index].isAI) {
-                    return AIMessage(
-                      messageModule: _savedChatMessage[index],
-                    );
-                  }
-                  return UserMessage(
-                    messageModule: _savedChatMessage[index],
-                  );
-                },
-              ),
+              ChatMessagesList(messages: _newMessages),
+              ChatMessagesList(messages: _savedChatMessage),
             ],
           ),
         ],
       ),
       bottomSheet: GetBuilder<SettingsController>(builder: (themeController) {
-        // _showRecording = _isRecording;
         return AnimatedContainer(
           duration: const Duration(milliseconds: 500),
           onEnd: () {
@@ -245,38 +214,27 @@ class _ChatScreenState extends State<ChatScreen> {
               _showRecording = _isRecording;
             });
           },
-
           height: _isRecording ? 250 : null,
           constraints: const BoxConstraints(maxHeight: 300, minHeight: 80),
-          //     : _purchasesController.isVIP
-          //         ? 80
-          //         : 130,
           padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
           child: Visibility(
               visible: _isRecording,
-              replacement: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    constraints: const BoxConstraints(maxHeight: 150),
-                    child: UserTextField(
-                      textController: _textController,
-                      onChanged: (value) {
-                        setState(() {});
-                      },
-                      onMicPressed: () {
-                        setState(() {
-                          _isRecording = true;
-                        });
-                      },
-                      onSendText: () async {
-                        await _sendMessage(_textController.text);
-                      },
-                      onPressImage: () async {},
-                    ),
-                  ),
-                ],
+              replacement: Container(
+                constraints: const BoxConstraints(maxHeight: 150),
+                child: UserTextField(
+                  textController: _textController,
+                  onChanged: (value) {
+                    setState(() {});
+                  },
+                  onMicPressed: () {
+                    _isRecording = true;
+                    setState(() {});
+                  },
+                  onSendText: () async {
+                    await _sendMessage(_textController.text);
+                  },
+                  onPressImage: () {},
+                ),
               ),
               child: MicView(
                 text: _speechToText.isListening
@@ -302,13 +260,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     _isRecording = false;
                   });
                 },
-              )
-              // : Container(
-              //     color: themeController.isDark
-              //         ? Constants.darkColor
-              //         : Colors.white,
-              //   ),
-              ),
+              )),
         );
       }),
     );

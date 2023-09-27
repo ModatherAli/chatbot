@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../controller/theme_controller.dart';
-import '../../modules/message_module.dart';
+import '../../modules/message.dart';
 import '../../res/constants.dart';
 import 'dropdown_options.dart';
 
 class UserMessage extends StatelessWidget {
   const UserMessage({super.key, required this.messageModule});
-  final MessageModule messageModule;
+  final Message messageModule;
   @override
   Widget build(BuildContext context) {
     return DropdownOptions(
