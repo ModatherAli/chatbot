@@ -2,53 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../controller/theme_controller.dart';
-import '../../../modules/message.dart';
-import '../../widgets/widgets.dart';
+import 'message _widget.dart';
 
 class AIMessage extends StatelessWidget {
   const AIMessage({
     super.key,
-    required this.messageModule,
+    required this.message,
   });
-  final Message messageModule;
+  final String message;
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<SettingsController>(builder: (themeController) {
-      return DropdownOptions(
-        messageModule: messageModule,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(15),
-              constraints: BoxConstraints(
-                maxWidth: Get.width * 0.85,
-              ),
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                borderRadius: BorderRadius.only(
-                  topRight: themeController.appLocal == 'en'
-                      ? const Radius.circular(15)
-                      : Radius.zero,
-                  topLeft: themeController.appLocal != 'en'
-                      ? const Radius.circular(15)
-                      : Radius.zero,
-                  bottomLeft: const Radius.circular(15),
-                  bottomRight: const Radius.circular(15),
-                ),
-              ),
-              child: Text(
-                messageModule.message.toString().trim(),
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
+    return GetBuilder<SettingsController>(builder: (settingsController) {
+      return MessageWidget(
+          text: message,
+          alignment: MainAxisAlignment.start,
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.only(
+            topRight: settingsController.appLocal == 'en'
+                ? const Radius.circular(15)
+                : Radius.zero,
+            topLeft: settingsController.appLocal != 'en'
+                ? const Radius.circular(15)
+                : Radius.zero,
+          ));
     });
   }
 }

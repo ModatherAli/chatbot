@@ -1,3 +1,4 @@
+import 'package:chatbot/helper/logger_utils.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 
 import '../modules/message.dart';
@@ -5,23 +6,24 @@ import '../services/api/chat_services.dart';
 import '../services/sql/sqflite_database.dart';
 
 class ChatController extends GetxController {
-  final List<Message> chatMessage = [];
-  List<Map<String, Object?>> messages = [];
+  List<Message> chatMessage = [];
 
   final SqlDatabase _sqlDatabase = SqlDatabase();
 
-  Future readData() async {
-    messages = await _sqlDatabase.readData('SELECT * FROM Messages');
+  @override
+  void onInit() {
+    super.onInit();
+    getLastMessages();
+  }
+
+  Future getLastMessages() async {
+    chatMessage = await _sqlDatabase.readData() ?? [];
+    Logger.print(chatMessage.length);
     update();
   }
 
-  Future insertQRDate({
-    required String message,
-    int isImage = 0,
-    int isAI = 0,
-  }) async {
-    await _sqlDatabase.insertData(
-        "INSERT INTO 'Messages' ('message', 'is_image', 'is_ai') VALUES('$message','$isImage','$isAI')");
+  Future saveMessage(Message message) async {
+    await _sqlDatabase.insertData(message);
   }
 
   onUserSendMessage(String text) async {
@@ -30,6 +32,7 @@ class ChatController extends GetxController {
       id: DateTime.now().millisecondsSinceEpoch,
     );
     chatMessage.add(message);
+    saveMessage(message);
     update();
   }
 
@@ -41,6 +44,7 @@ class ChatController extends GetxController {
       isAI: true,
     );
     chatMessage.add(message);
+    saveMessage(message);
     update();
   }
 

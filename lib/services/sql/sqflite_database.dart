@@ -4,6 +4,9 @@ import 'dart:developer';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../../helper/logger_utils.dart';
+import '../../modules/message.dart';
+
 class SqlDatabase {
   Database? _database;
 
@@ -23,43 +26,38 @@ class SqlDatabase {
 
   FutureOr<void> _onCreate(Database db, int version) async {
     await db.execute('''CREATE TABLE "Messages"(
-    "id" INTEGER PRIMARY KEY,
+    "id" INTEGER,
     "message" TEXT,
-    "is_image" INTEGER,
     "is_ai" INTEGER)''');
 
     log('database created');
   }
 
-  Future<List<Map<String, Object?>>> readData(String sql) async {
-    Database? db = await database;
+  Future<List<Message>?> readData() async {
+    List<Message>? messages;
+    try {
+      Database? db = await database;
 
-    List<Map<String, Object?>> data = await db!.rawQuery(sql);
-    log('read success');
-    return data;
+      List<Map<String, Object?>> data = await db!.query('Messages');
+
+      messages = data.map((map) => Message.fromJson(map)).toList();
+
+      log('read success');
+    } catch (e) {
+      Logger.print('error in read data :$e');
+    }
+    return messages;
   }
 
-  Future<int> insertData(String sql) async {
+  Future<int> insertData(Message message) async {
     Database? db = await database;
 
-    int data = await db!.rawInsert(sql);
+    int? data = await db!.insert(
+      'Messages',
+      message.toJson(),
+    );
+
     log('insert success $data');
-    return data;
-  }
-
-  Future<int> updateData(String sql) async {
-    Database? db = await database;
-
-    int data = await db!.rawUpdate(sql);
-    log('update success $data');
-    return data;
-  }
-
-  Future<int> deleteData(String sql) async {
-    Database? db = await database;
-
-    int data = await db!.rawDelete(sql);
-    log('delete success $data');
     return data;
   }
 

@@ -1,6 +1,7 @@
 import 'package:chatbot/modules/message.dart';
-import 'package:chatbot/screens/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+
+import 'widgets.dart';
 
 class ChatMessagesList extends StatelessWidget {
   final List<Message> messages;
@@ -14,13 +15,9 @@ class ChatMessagesList extends StatelessWidget {
       shrinkWrap: true,
       itemBuilder: (context, index) {
         if (messages[index].isAI) {
-          return AIMessage(
-            messageModule: messages[index],
-          );
+          return AIMessage(message: messages[index].message);
         }
-        return UserMessage(
-          messageModule: messages[index],
-        );
+        return UserMessage(message: messages[index].message);
       },
     );
   }

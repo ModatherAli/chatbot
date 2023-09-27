@@ -37,8 +37,6 @@ class _AIWritingState extends State<AIWriting>
                 image: AssetImage(typingImage),
                 fit: BoxFit.cover,
               ),
-              // color:
-              //     settingsController.isDark ? Constants.darkColor : Colors.white,
               borderRadius: BorderRadius.only(
                 topRight: settingsController.appLocal == 'en'
                     ? const Radius.circular(15)

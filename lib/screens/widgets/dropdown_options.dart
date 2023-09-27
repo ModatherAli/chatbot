@@ -1,54 +1,61 @@
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:get/get.dart';
-import 'package:share_plus/share_plus.dart';
 
-import '../../modules/message.dart';
+import '../../../../../../packages.dart';
 
 class DropdownOptions extends StatelessWidget {
-  const DropdownOptions(
-      {super.key, required this.child, required this.messageModule});
-  final Widget child;
-  final Message messageModule;
+  final Widget? child;
+  final List<DropMenuItem> items;
+  final double width;
+  const DropdownOptions({
+    super.key,
+    this.child,
+    required this.items,
+    this.width = 200,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: DropdownButtonHideUnderline(
         child: DropdownButton2(
-          buttonStyleData: const ButtonStyleData(
-            // padding: EdgeInsets.symmetric(horizontal: 60),
-            elevation: 0,
-          ),
-          customButton: child,
-          items: [
-            ...MenuItems.firstItems.map(
-              (item) => DropdownMenuItem<MenuItem>(
-                value: item,
-                child: MenuItems.buildItem(item),
+          customButton: Center(child: child ?? const Icon(Icons.more_vert)),
+          items: List.generate(
+            items.length,
+            (index) => DropdownMenuItem(
+              value: index,
+              child: Row(
+                children: [
+                  Icon(
+                    items[index].icon,
+                    size: 20,
+                    color: items[index].color ?? Colors.grey,
+                  ),
+                  const SizedBox(width: 10),
+                  AutoSizeText(
+                    items[index].text.tr,
+                    maxLines: 1,
+                  ),
+                  const Spacer(),
+                  if (items[index].trailing != null) items[index].trailing!
+                ],
               ),
             ),
-          ],
+          ),
           onChanged: (value) {
-            MenuItems.onChanged(context, value as MenuItem,
-                messageModule.message.toString().trim());
+            items[value as int].onTap();
           },
           dropdownStyleData: DropdownStyleData(
-            width: 160,
+            width: width,
             padding: const EdgeInsets.symmetric(vertical: 6),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4),
-              // color: Colors.redAccent,
             ),
             elevation: 8,
-            offset: const Offset(0, 8),
           ),
-          menuItemStyleData: MenuItemStyleData(
-            customHeights: [
-              ...List<double>.filled(MenuItems.firstItems.length, 48),
-            ],
-            padding: const EdgeInsets.only(left: 16, right: 16),
+          menuItemStyleData: const MenuItemStyleData(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            height: 40,
           ),
         ),
       ),
@@ -56,48 +63,17 @@ class DropdownOptions extends StatelessWidget {
   }
 }
 
-class MenuItem {
+class DropMenuItem {
   final String text;
   final IconData icon;
-
-  const MenuItem({
+  final Color? color;
+  final Widget? trailing;
+  final void Function() onTap;
+  const DropMenuItem({
     required this.text,
     required this.icon,
+    required this.onTap,
+    this.trailing,
+    this.color,
   });
-}
-
-class MenuItems {
-  static const List<MenuItem> firstItems = [copy, share];
-  // static const List<MenuItem> secondItems = [];
-
-  static const copy = MenuItem(text: 'Copy', icon: Icons.copy);
-  static const share = MenuItem(text: 'Share', icon: Icons.ios_share);
-
-  static Widget buildItem(MenuItem item) {
-    return Row(
-      children: [
-        Icon(item.icon, size: 22),
-        const SizedBox(
-          width: 10,
-        ),
-        Text(
-          item.text.tr,
-          style: const TextStyle(
-              // color: Colors.white,
-              ),
-        ),
-      ],
-    );
-  }
-
-  static onChanged(BuildContext context, MenuItem item, String text) async {
-    switch (item) {
-      case MenuItems.copy:
-        Clipboard.setData(ClipboardData(text: text));
-        break;
-      case MenuItems.share:
-        await Share.share(text);
-        break;
-    }
-  }
 }
