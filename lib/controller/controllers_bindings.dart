@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 import 'chat_controller.dart';
-import 'theme_controller.dart';
+import 'settings_controller.dart';
 
 class ControllerBindings implements Bindings {
   @override

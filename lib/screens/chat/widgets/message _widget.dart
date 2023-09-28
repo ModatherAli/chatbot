@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../../../controller/theme_controller.dart';
+import '../../../controller/settings_controller.dart';
 import '../../../res/constants.dart';
 import '../../widgets/dropdown_options.dart';
 

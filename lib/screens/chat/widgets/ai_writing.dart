@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../controller/theme_controller.dart';
+import '../../../controller/settings_controller.dart';
 
 class AIWriting extends StatefulWidget {
   const AIWriting({super.key});

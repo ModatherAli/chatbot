@@ -5,11 +5,10 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'controller/controllers_bindings.dart';
-import 'controller/theme_controller.dart';
+import 'controller/settings_controller.dart';
 import 'res/app_locale.dart';
 import 'res/app_theme.dart';
-import 'screens/chat/chat_screen.dart';
-import 'screens/settings/local_screen.dart';
+import 'splash_screen.dart';
 
 late SharedPreferences sharedPreferences;
 void main() async {
@@ -66,9 +65,7 @@ class _MyAppState extends State<MyApp> {
         initialBinding: ControllerBindings(),
         locale: Locale(_settingsController.appLocal),
         translations: AppLocale(),
-        home: _settingsController.isLocalNull
-            ? const LocalScreen()
-            : const ChatScreen(),
+        home: AnimatedScreen(),
         builder: EasyLoading.init(),
       );
     });

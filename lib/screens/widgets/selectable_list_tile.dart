@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../controller/theme_controller.dart';
+import '../../controller/settings_controller.dart';
 
 class SelectableListTile extends StatelessWidget {
   const SelectableListTile(

@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 
 import '../../controller/chat_controller.dart';
-import '../../controller/theme_controller.dart';
+import '../../controller/settings_controller.dart';
 import '../../packages.dart';
 import '../settings/settings_screen.dart';
 import '../widgets/widgets.dart';

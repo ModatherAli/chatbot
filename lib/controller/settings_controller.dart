@@ -7,10 +7,8 @@ import '../main.dart';
 class SettingsController extends GetxController {
   late SharedPreferences _sharedPreferences;
   bool? isDark;
-  bool isLocalNull = false;
   String appLocal = 'ar';
   String voiceLocal = 'ar';
-  int freeMessagesCunter = 0;
   bool isFirstImage = true;
 
   Future init() async {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
-import '../../../controller/theme_controller.dart';
+import '../../../controller/settings_controller.dart';
 import '../../../res/constants.dart';
 
 class UserTextField extends StatefulWidget {

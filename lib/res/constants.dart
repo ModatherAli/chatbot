@@ -6,4 +6,5 @@ class Constants {
   static const Color primaryDarkColor = Color(0xFF14213d);
 
   static const String appID = 'ai.chatbot';
+  static const String appIcon = 'assets/images/chatbot.png';
 }
