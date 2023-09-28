@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return GetBuilder<SettingsController>(builder: (themeController) {
       return GetMaterialApp(
-        title: 'Chatbot',
+        title: 'AI ChatBot',
         theme: lightTheme,
         darkTheme: darkTheme,
         themeMode: _settingsController.getThemeMode(),

@@ -9,7 +9,6 @@ class SettingsController extends GetxController {
   bool? isDark;
   String appLocal = 'ar';
   String voiceLocal = 'ar';
-  bool isFirstImage = true;
 
   Future init() async {
     _sharedPreferences = await SharedPreferences.getInstance();

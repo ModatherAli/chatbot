@@ -83,7 +83,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: const Text('Chatbot 👋'),
+        title: const Text('AI ChatBot 👋'),
         elevation: 0,
         actions: [
           IconButton(
