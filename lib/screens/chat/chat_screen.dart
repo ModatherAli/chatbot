@@ -105,7 +105,8 @@ class _ChatScreenState extends State<ChatScreen> {
         ],
       ),
       body: GetBuilder<ChatController>(builder: (_) {
-        return Padding(
+        return AnimatedPadding(
+          duration: const Duration(milliseconds: 200),
           padding: EdgeInsets.only(bottom: _showRecording ? 270 : 80, top: 10),
           child: ChatMessagesList(
             messages: _chatController.chatMessage,

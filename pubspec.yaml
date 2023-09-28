@@ -50,23 +50,12 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-#   flutter_native_splash: ^2.3.2
+  flutter_launcher_icons: "^0.13.1"
 
-
-# flutter_native_splash:
-#   fullscreen: true
-#   color: "#FFFFFF"
-#   android: true
-#   image: assets/images/Capture.png
-#   # color: "#286f55"
-#   android_gravity: center
-#   android_12:
-#     fullscreen: true
-#     color: "#FFFFFF"
-#     image: assets/images/Capture.png
-#     # icon_background_color: "#286f55"
-#     # color: "#286f55"
-#     android_gravity: center
+flutter_launcher_icons:
+  android: "launcher_icon"
+  # ios: true
+  image_path: "assets/images/chatbot.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
