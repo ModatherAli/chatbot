@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:chatbot/helper/logger_utils.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:http/http.dart';
 
 import '../modules/message.dart';
 import '../services/api/chat_services.dart';
@@ -40,7 +43,7 @@ class ChatController extends GetxController {
   }
 
   Future onAISendMessage(String text) async {
-    Stream? stream = ChatServices.receiveMessageFromAI(text);
+    Stream<Response>? stream = ChatServices.receiveMessageFromAI(text);
     await Future.delayed(const Duration(milliseconds: 1500));
     if (stream != null) {
       Message message = Message(
@@ -49,8 +52,10 @@ class ChatController extends GetxController {
         isAI: true,
       );
       chatMessage.insert(0, message);
-      stream.listen((event) {
-        chatMessage.first.message.write(event.body);
+      stream.listen((Response event) {
+        var message = utf8.decode(event.bodyBytes);
+
+        chatMessage.first.message.write('$message');
         update();
       }).onDone(() {
         saveMessage(message);

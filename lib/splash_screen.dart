@@ -31,7 +31,10 @@ class _AnimatedScreenState extends State<AnimatedScreen>
         _controller.forward();
         return ChatScreen();
       },
-      splash: SplashScreen(controller: _controller),
+      splash: Directionality(
+        textDirection: TextDirection.ltr,
+        child: SplashScreen(controller: _controller),
+      ),
     );
   }
 }

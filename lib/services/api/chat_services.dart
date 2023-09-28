@@ -16,9 +16,9 @@ class ChatServices {
         Uri.parse(freeGPTUrl),
         body: {'message': prompt},
       );
-      response.asStream().listen((event) {
-        Logger.print(event.body);
-      });
+      // response.asStream().listen((event) {
+      //   Logger.print(event.body);
+      // });
       stream = response.asStream();
       // return stream;
       // StreamSubscription streamSubscription =

@@ -89,6 +89,7 @@ class AppLocale implements Translations {
           "Status: pro": "الحالة: مشترك",
           'Save': 'حفظ',
           'Saved': 'تم',
+          'System': 'مظهر الجهاز',
         },
       };
 }
