@@ -27,24 +27,36 @@ class ChatController extends GetxController {
   }
 
   onUserSendMessage(String text) async {
+    StringBuffer stringBuffer = StringBuffer();
+    stringBuffer.write(text);
+
     Message message = Message(
-      message: text,
+      message: stringBuffer,
       id: DateTime.now().millisecondsSinceEpoch,
     );
-    chatMessage.add(message);
+    chatMessage.insert(0, message);
     saveMessage(message);
     update();
   }
 
   Future onAISendMessage(String text) async {
-    String msg = await ChatServices.receiveMessageFromAI(text);
-    Message message = Message(
-      message: msg,
-      id: DateTime.now().millisecondsSinceEpoch,
-      isAI: true,
-    );
-    chatMessage.add(message);
-    saveMessage(message);
+    Stream? stream = ChatServices.receiveMessageFromAI(text);
+    await Future.delayed(const Duration(milliseconds: 1500));
+    if (stream != null) {
+      Message message = Message(
+        message: StringBuffer(),
+        id: DateTime.now().millisecondsSinceEpoch,
+        isAI: true,
+      );
+      chatMessage.insert(0, message);
+      stream.listen((event) {
+        chatMessage.first.message.write(event.body);
+        update();
+      }).onDone(() {
+        saveMessage(message);
+      });
+    }
+
     update();
   }
 

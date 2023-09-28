@@ -25,7 +25,6 @@ class _ChatScreenState extends State<ChatScreen> {
 
   final ScrollController _scrollController = ScrollController();
 
-  bool _aiIsWriting = false;
   bool _isRecording = false;
   bool _showRecording = false;
   bool _speechEnabled = false;
@@ -33,17 +32,17 @@ class _ChatScreenState extends State<ChatScreen> {
   String _lastWords = '';
 
   Future _sendMessage(String msg) async {
-    setState(() {
-      _textController.clear();
-      _aiIsWriting = true;
-    });
+    _scrollController.animateTo(
+      0,
+      duration: const Duration(seconds: 1),
+      curve: Curves.fastOutSlowIn,
+    );
+    _textController.clear();
+    setState(() {});
 
     await _chatController.onUserSendMessage(msg);
     await _chatController.onAISendMessage(msg);
-
-    setState(() {
-      _aiIsWriting = false;
-    });
+    setState(() {});
   }
 
   /// This has to happen only once per app
@@ -106,14 +105,12 @@ class _ChatScreenState extends State<ChatScreen> {
         ],
       ),
       body: GetBuilder<ChatController>(builder: (_) {
-        return ListView(
+        return Padding(
           padding: EdgeInsets.only(bottom: _showRecording ? 270 : 80, top: 10),
-          reverse: true,
-          controller: _scrollController,
-          children: [
-            Visibility(visible: _aiIsWriting, child: const AIWriting()),
-            ChatMessagesList(messages: _chatController.chatMessage),
-          ],
+          child: ChatMessagesList(
+            messages: _chatController.chatMessage,
+            scrollController: _scrollController,
+          ),
         );
       }),
       bottomSheet: GetBuilder<SettingsController>(builder: (themeController) {

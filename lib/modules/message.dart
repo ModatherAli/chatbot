@@ -17,18 +17,23 @@ class Message {
   });
 
   final int id;
-  final dynamic message;
+  final StringBuffer message;
   final bool isAI;
 
-  factory Message.fromJson(Map<String, dynamic> json) => Message(
-        id: json['id'],
-        message: json["message"],
-        isAI: json["is_ai"] == 1,
-      );
+  factory Message.fromJson(Map<String, dynamic> json) {
+    StringBuffer stringBuffer = StringBuffer();
+    stringBuffer.write(json["message"]);
+
+    return Message(
+      id: json['id'],
+      message: stringBuffer,
+      isAI: json["is_ai"] == 1,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        "message": message,
+        "message": message.toString().trim(),
         "is_ai": isAI ? 1 : 0,
       };
 }

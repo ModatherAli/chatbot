@@ -40,7 +40,8 @@ class SqlDatabase {
 
       List<Map<String, Object?>> data = await db!.query('Messages');
 
-      messages = data.map((map) => Message.fromJson(map)).toList();
+      messages =
+          data.map((map) => Message.fromJson(map)).toList().reversed.toList();
 
       log('read success');
     } catch (e) {
