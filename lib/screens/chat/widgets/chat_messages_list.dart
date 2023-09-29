@@ -13,15 +13,18 @@ class ChatMessagesList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: messages.length,
-      // physics: const NeverScrollableScrollPhysics(),
       reverse: true,
       shrinkWrap: true,
       controller: scrollController,
       itemBuilder: (context, index) {
         if (messages[index].isAI) {
-          return AIMessage(message: messages[index].message.toString());
+          Message message = messages[index];
+          if (message.content.isEmpty) {
+            return AIWriting();
+          }
+          return AIMessage(message: message);
         }
-        return UserMessage(message: messages[index].message.toString());
+        return UserMessage(message: messages[index]);
       },
     );
   }

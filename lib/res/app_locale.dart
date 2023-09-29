@@ -90,6 +90,7 @@ class AppLocale implements Translations {
           'Save': 'حفظ',
           'Saved': 'تم',
           'System': 'مظهر الجهاز',
+          'Delete': 'حذف',
         },
       };
 }

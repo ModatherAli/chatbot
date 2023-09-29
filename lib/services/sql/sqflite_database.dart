@@ -62,6 +62,18 @@ class SqlDatabase {
     return data;
   }
 
+  Future<int> deleteData(Message message) async {
+    Database? db = await database;
+
+    int data = await db!.delete(
+      'Messages',
+      where: 'id = ?',
+      whereArgs: [message.id],
+    );
+    log('delete success $data');
+    return data;
+  }
+
   deleteAll() async {
     String path = await getDatabasesPath();
     String dbName = 'database.db';

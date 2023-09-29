@@ -1,29 +1,36 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../../controller/chat_controller.dart';
 import '../../../controller/settings_controller.dart';
+import '../../../modules/message.dart';
 import '../../../res/constants.dart';
 import '../../widgets/dropdown_options.dart';
 
+// ignore: must_be_immutable
 class MessageWidget extends StatelessWidget {
-  final String text;
+  final Message message;
   final MainAxisAlignment alignment;
   final Color color;
   final Color? textColor;
   final BorderRadius borderRadius;
-  const MessageWidget({
+  final bool animatedText;
+  MessageWidget({
     super.key,
-    required this.text,
     this.alignment = MainAxisAlignment.end,
     this.color = Constants.primaryColor,
     this.textColor,
     required this.borderRadius,
+    this.animatedText = false,
+    required this.message,
   });
-
+  ChatController _chatController = Get.find();
   @override
   Widget build(BuildContext context) {
+    final String text = message.content.toString();
     return DropdownOptions(
       items: [
         DropMenuItem(
@@ -38,6 +45,13 @@ class MessageWidget extends StatelessWidget {
           icon: Icons.ios_share,
           onTap: () {
             Share.share(text);
+          },
+        ),
+        DropMenuItem(
+          text: 'Delete',
+          icon: Icons.delete_forever_rounded,
+          onTap: () {
+            _chatController.deleteMessage(message);
           },
         ),
       ],
@@ -57,12 +71,32 @@ class MessageWidget extends StatelessWidget {
                     const BorderRadius.vertical(bottom: Radius.circular(15)) +
                         borderRadius,
               ),
-              child: Text(
-                text,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                  color: textColor,
+              child: Visibility(
+                visible: animatedText,
+                child: AnimatedTextKit(
+                    onFinished: () {
+                      print('Finished');
+                    },
+                    displayFullTextOnTap: true,
+                    totalRepeatCount: 1,
+                    animatedTexts: [
+                      TypewriterAnimatedText(
+                        text,
+                        textStyle: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: textColor,
+                        ),
+                        speed: const Duration(milliseconds: 100),
+                      ),
+                    ]),
+                replacement: Text(
+                  text,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color: textColor,
+                  ),
                 ),
               ),
             ),

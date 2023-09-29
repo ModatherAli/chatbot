@@ -12,12 +12,12 @@ String messageModuleToJson(Message data) => json.encode(data.toJson());
 class Message {
   Message({
     required this.id,
-    required this.message,
+    required this.content,
     this.isAI = false,
   });
 
   final int id;
-  final StringBuffer message;
+  final StringBuffer content;
   final bool isAI;
 
   factory Message.fromJson(Map<String, dynamic> json) {
@@ -26,14 +26,14 @@ class Message {
 
     return Message(
       id: json['id'],
-      message: stringBuffer,
+      content: stringBuffer,
       isAI: json["is_ai"] == 1,
     );
   }
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        "message": message.toString().trim(),
+        "message": content.toString().trim(),
         "is_ai": isAI ? 1 : 0,
       };
 }

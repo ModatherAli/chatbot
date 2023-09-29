@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../controller/settings_controller.dart';
+import '../../../modules/message.dart';
 import 'message _widget.dart';
 
 class AIMessage extends StatelessWidget {
@@ -9,13 +10,13 @@ class AIMessage extends StatelessWidget {
     super.key,
     required this.message,
   });
-  final String message;
+  final Message message;
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SettingsController>(builder: (settingsController) {
       return MessageWidget(
-          text: message,
+          message: message,
           alignment: MainAxisAlignment.start,
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.only(
