@@ -22,15 +22,13 @@ ThemeData darkTheme = ThemeData(
   useMaterial3: true,
   primarySwatch: Constants.primaryColor,
   cardColor: Constants.darkColor,
-  colorScheme: const ColorScheme.dark(
-      // primary: Constants.darkColor,
-      ),
+  colorScheme: const ColorScheme.dark(),
   appBarTheme: const AppBarTheme(
-    backgroundColor: Color(0xFF14213d),
+    backgroundColor: Constants.primaryDarkColor,
     titleTextStyle: TextStyle(
       fontWeight: FontWeight.w500,
       fontSize: 24,
     ),
   ),
-  scaffoldBackgroundColor: const Color(0xFF14213d),
+  scaffoldBackgroundColor: Constants.primaryDarkColor,
 );

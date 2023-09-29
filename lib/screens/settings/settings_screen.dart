@@ -21,7 +21,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   final String _playStoreLink =
       'https://play.google.com/store/apps/details?id=${Constants.appID}';
-  final String _policyLink = 'https://229877.hostmypolicy.com';
+  final String _policyLink = ' ';
 
   ChatController _chatController = Get.find();
   @override

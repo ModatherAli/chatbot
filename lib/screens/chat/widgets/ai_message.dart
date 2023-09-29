@@ -2,53 +2,69 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../controller/settings_controller.dart';
+import '../../../controller/controller.dart';
 import '../../../modules/message.dart';
 import 'message _widget.dart';
 
-class AIMessage extends StatelessWidget {
-  const AIMessage({
+class AIMessage extends StatefulWidget {
+  AIMessage({
     super.key,
     required this.message,
+    required this.lastMessage,
   });
   final Message message;
 
-  // final bool animatedText;
+  final bool lastMessage;
+
+  @override
+  State<AIMessage> createState() => _AIMessageState();
+}
+
+class _AIMessageState extends State<AIMessage> {
+  bool _isTyping = true;
+  SettingsController _settingsController = Get.find();
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<SettingsController>(builder: (settingsController) {
+    //  return GetBuilder<SettingsController>(builder: (settingsController) {
+    return GetBuilder<ChatController>(builder: (chatController) {
       return MessageWidget(
-          message: message,
+          message: widget.message,
           content: Visibility(
-            visible: false,
+            visible:
+                widget.lastMessage && _isTyping && chatController.isNewMessage,
             child: AnimatedTextKit(
                 onFinished: () {
                   print('Finished');
+                  setState(() => _isTyping = false);
+                },
+                onTap: () {
+                  setState(() => _isTyping = false);
                 },
                 displayFullTextOnTap: true,
                 totalRepeatCount: 1,
                 animatedTexts: [
                   TypewriterAnimatedText(
-                    message.content,
+                    widget.message.content,
                     textStyle: TextStyle(fontSize: 14.5),
-                    speed: const Duration(milliseconds: 100),
+                    speed: const Duration(milliseconds: 50),
                   ),
                 ]),
             replacement: Text(
-              message.content,
+              widget.message.content,
               style: TextStyle(fontSize: 15),
             ),
           ),
           alignment: MainAxisAlignment.start,
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.only(
-            topRight: settingsController.appLocal == 'en'
+            topRight: _settingsController.appLocal == 'en'
                 ? const Radius.circular(15)
                 : Radius.zero,
-            topLeft: settingsController.appLocal != 'en'
+            topLeft: _settingsController.appLocal != 'en'
                 ? const Radius.circular(15)
                 : Radius.zero,
           ));
     });
+//    });
   }
 }

@@ -27,6 +27,7 @@ class _AnimatedScreenState extends State<AnimatedScreen>
   Widget build(BuildContext context) {
     return AnimatedSplashScreen.withScreenFunction(
       splashIconSize: 200,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       screenFunction: () async {
         _controller.forward();
         return ChatScreen();

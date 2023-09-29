@@ -10,8 +10,8 @@ import '../services/sql/sqflite_database.dart';
 
 class ChatController extends GetxController {
   List<Message> chatMessage = [];
-
   final SqlDatabase _sqlDatabase = SqlDatabase();
+  bool isNewMessage = false;
   void onInit() {
     super.onInit();
     getLastMessages();
@@ -58,6 +58,7 @@ class ChatController extends GetxController {
     Stream<Response>? stream = ChatServices.receiveMessageFromAI(text);
     await Future.delayed(const Duration(milliseconds: 1500));
     if (stream != null) {
+      isNewMessage = true;
       Message message = Message(
         content: '',
         id: DateTime.now().millisecondsSinceEpoch,

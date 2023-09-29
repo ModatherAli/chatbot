@@ -22,7 +22,10 @@ class ChatMessagesList extends StatelessWidget {
           if (message.content.isEmpty) {
             return AIWriting();
           }
-          return AIMessage(message: message);
+          return AIMessage(
+            message: message,
+            lastMessage: index == 0,
+          );
         }
         return UserMessage(message: messages[index]);
       },

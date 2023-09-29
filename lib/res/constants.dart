@@ -7,4 +7,6 @@ class Constants {
 
   static const String appID = 'ai.chatbot';
   static const String appIcon = 'assets/images/chatbot.png';
+
+  static const String policyLink = '';
 }
