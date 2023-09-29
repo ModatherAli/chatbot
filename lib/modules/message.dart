@@ -17,16 +17,13 @@ class Message {
   });
 
   final int id;
-  final StringBuffer content;
+  String content;
   final bool isAI;
 
   factory Message.fromJson(Map<String, dynamic> json) {
-    StringBuffer stringBuffer = StringBuffer();
-    stringBuffer.write(json["message"]);
-
     return Message(
       id: json['id'],
-      content: stringBuffer,
+      content: json["message"],
       isAI: json["is_ai"] == 1,
     );
   }

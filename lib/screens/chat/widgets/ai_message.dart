@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,11 +13,32 @@ class AIMessage extends StatelessWidget {
   });
   final Message message;
 
+  // final bool animatedText;
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SettingsController>(builder: (settingsController) {
       return MessageWidget(
           message: message,
+          content: Visibility(
+            visible: false,
+            child: AnimatedTextKit(
+                onFinished: () {
+                  print('Finished');
+                },
+                displayFullTextOnTap: true,
+                totalRepeatCount: 1,
+                animatedTexts: [
+                  TypewriterAnimatedText(
+                    message.content,
+                    textStyle: TextStyle(fontSize: 14.5),
+                    speed: const Duration(milliseconds: 100),
+                  ),
+                ]),
+            replacement: Text(
+              message.content,
+              style: TextStyle(fontSize: 15),
+            ),
+          ),
           alignment: MainAxisAlignment.start,
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.only(

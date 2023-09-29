@@ -30,18 +30,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final SettingsController _settingsController =
       Get.put(SettingsController(), permanent: true);
-  bool showSplash = true;
-  // final InAppReview inAppReview = InAppReview.instance;
-
-  // _appReview() async {
-  //   if (await inAppReview.isAvailable()) {
-  //     await inAppReview.requestReview();
-  //   }
-  // }
 
   _setServices() async {
-    // _appReview();
-
     _settingsController.init();
     setState(() {});
   }

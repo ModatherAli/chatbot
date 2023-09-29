@@ -12,8 +12,6 @@ class ChatController extends GetxController {
   List<Message> chatMessage = [];
 
   final SqlDatabase _sqlDatabase = SqlDatabase();
-
-  @override
   void onInit() {
     super.onInit();
     getLastMessages();
@@ -44,11 +42,11 @@ class ChatController extends GetxController {
   }
 
   onUserSendMessage(String text) async {
-    StringBuffer stringBuffer = StringBuffer();
-    stringBuffer.write(text);
+    // StringBuffer stringBuffer = StringBuffer();
+    // stringBuffer.write(text);
 
     Message message = Message(
-      content: stringBuffer,
+      content: text,
       id: DateTime.now().millisecondsSinceEpoch,
     );
     chatMessage.insert(0, message);
@@ -61,7 +59,7 @@ class ChatController extends GetxController {
     await Future.delayed(const Duration(milliseconds: 1500));
     if (stream != null) {
       Message message = Message(
-        content: StringBuffer(),
+        content: '',
         id: DateTime.now().millisecondsSinceEpoch,
         isAI: true,
       );
@@ -69,7 +67,7 @@ class ChatController extends GetxController {
       stream.listen((Response event) {
         var message = utf8.decode(event.bodyBytes);
 
-        chatMessage.first.content.write('$message');
+        chatMessage.first.content = '$message';
         update();
       }).onDone(() {
         saveMessage(message);

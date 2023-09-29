@@ -1,4 +1,3 @@
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -15,18 +14,18 @@ class MessageWidget extends StatelessWidget {
   final Message message;
   final MainAxisAlignment alignment;
   final Color color;
-  final Color? textColor;
+  final Widget content;
   final BorderRadius borderRadius;
-  final bool animatedText;
+
   MessageWidget({
     super.key,
     this.alignment = MainAxisAlignment.end,
     this.color = Constants.primaryColor,
-    this.textColor,
+    required this.content,
     required this.borderRadius,
-    this.animatedText = false,
     required this.message,
   });
+
   ChatController _chatController = Get.find();
   @override
   Widget build(BuildContext context) {
@@ -71,32 +70,7 @@ class MessageWidget extends StatelessWidget {
                     const BorderRadius.vertical(bottom: Radius.circular(15)) +
                         borderRadius,
               ),
-              child: Visibility(
-                visible: animatedText,
-                child: AnimatedTextKit(
-                    onFinished: () {
-                      print('Finished');
-                    },
-                    displayFullTextOnTap: true,
-                    totalRepeatCount: 1,
-                    animatedTexts: [
-                      TypewriterAnimatedText(
-                        text,
-                        textStyle: TextStyle(
-                          fontSize: 14.5,
-                          color: textColor,
-                        ),
-                        speed: const Duration(milliseconds: 100),
-                      ),
-                    ]),
-                replacement: Text(
-                  text,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: textColor,
-                  ),
-                ),
-              ),
+              child: content,
             ),
           ],
         );
