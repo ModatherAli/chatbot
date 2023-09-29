@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../main.dart';
-
 class SettingsController extends GetxController {
   late SharedPreferences _sharedPreferences;
   bool? isDark;
@@ -25,7 +23,7 @@ class SettingsController extends GetxController {
     } else if (Get.deviceLocale != null) {
       appLocal = Get.deviceLocale!.languageCode == 'ar' ? 'ar' : 'en';
     }
-    voiceLocal = sharedPreferences.getString('voice_local') ?? appLocal;
+    voiceLocal = _sharedPreferences.getString('voice_local') ?? appLocal;
     update();
     await Get.updateLocale(Locale(appLocal));
   }
@@ -41,7 +39,7 @@ class SettingsController extends GetxController {
 
   Future changeVoiceLocal(String langCode) async {
     voiceLocal = langCode;
-    await sharedPreferences.setString('voice_local', langCode);
+    await _sharedPreferences.setString('voice_local', langCode);
     update();
   }
 
