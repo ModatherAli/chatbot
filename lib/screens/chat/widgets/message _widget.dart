@@ -83,8 +83,7 @@ class MessageWidget extends StatelessWidget {
                       TypewriterAnimatedText(
                         text,
                         textStyle: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 14.5,
                           color: textColor,
                         ),
                         speed: const Duration(milliseconds: 100),
@@ -94,7 +93,6 @@ class MessageWidget extends StatelessWidget {
                   text,
                   style: TextStyle(
                     fontSize: 15,
-                    fontWeight: FontWeight.w500,
                     color: textColor,
                   ),
                 ),

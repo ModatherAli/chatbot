@@ -35,6 +35,14 @@ class ChatController extends GetxController {
     update();
   }
 
+  Future deleteAllChat() async {
+    for (var message in chatMessage) {
+      await _sqlDatabase.deleteData(message);
+    }
+    chatMessage.clear();
+    update();
+  }
+
   onUserSendMessage(String text) async {
     StringBuffer stringBuffer = StringBuffer();
     stringBuffer.write(text);

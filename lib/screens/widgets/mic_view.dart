@@ -44,8 +44,8 @@ class _MicViewState extends State<MicView> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 const SizedBox(
-                  width: 60,
-                  height: 60,
+                  width: 50,
+                  height: 50,
                 ),
                 GestureDetector(
                   onTap: widget.onRecord,

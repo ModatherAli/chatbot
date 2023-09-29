@@ -91,6 +91,11 @@ class AppLocale implements Translations {
           'Saved': 'تم',
           'System': 'مظهر الجهاز',
           'Delete': 'حذف',
+          'chat': 'المحادثة',
+          'This will remove all your message': 'هذا الخيار سيحذف جميع رسائلك',
+          'Back': 'رجوع',
+          'Remove all': 'حذف الكل',
+          'Delete the chat': 'حذف المحادثة',
         },
       };
 }

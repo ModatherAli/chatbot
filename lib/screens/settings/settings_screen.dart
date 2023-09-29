@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../controller/chat_controller.dart';
 import '../../helper/helper_services.dart';
 import '../../res/constants.dart';
 import '../widgets/widgets.dart';
@@ -22,11 +23,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
       'https://play.google.com/store/apps/details?id=${Constants.appID}';
   final String _policyLink = 'https://229877.hostmypolicy.com';
 
+  ChatController _chatController = Get.find();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('SETTINGS'.tr),
+        title: Text('SETTINGS'),
         centerTitle: true,
       ),
       body: ListView(
@@ -91,29 +93,51 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 title: 'Contact us',
                 iconData: Icons.contact_support,
               ),
-              WidgetsCollection(
-                title: 'policy',
-                children: [
-                  MyListTile(
-                    title: 'Terms of Use'.tr,
-                    onTap: () {
-                      HelperServices.lunchUrl(_policyLink);
-                    },
-                    iconData: Icons.menu_book,
-                  ),
-                  MyListTile(
-                    onTap: () {
-                      HelperServices.lunchUrl(_policyLink);
-                    },
-                    title: 'Privacy Policy'.tr,
-                    iconData: Icons.privacy_tip,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 30),
-              const Text('Powered by GPT technology'),
             ],
           ),
+          WidgetsCollection(
+            title: 'chat',
+            children: [
+              MyListTile(
+                onTap: () {
+                  Get.defaultDialog(
+                    title: 'This will remove all your message'.tr,
+                    content: SizedBox(),
+                    onCancel: () {},
+                    textCancel: 'Back'.tr,
+                    textConfirm: 'Remove all'.tr,
+                    onConfirm: () {
+                      _chatController.deleteAllChat();
+                      Get.back();
+                    },
+                  );
+                },
+                title: 'Delete the chat',
+                iconData: Icons.playlist_remove_outlined,
+              ),
+            ],
+          ),
+          WidgetsCollection(
+            title: 'policy',
+            children: [
+              MyListTile(
+                title: 'Terms of Use',
+                onTap: () {
+                  HelperServices.lunchUrl(_policyLink);
+                },
+                iconData: Icons.menu_book,
+              ),
+              MyListTile(
+                onTap: () {
+                  HelperServices.lunchUrl(_policyLink);
+                },
+                title: 'Privacy Policy',
+                iconData: Icons.privacy_tip,
+              ),
+            ],
+          ),
+          const SizedBox(height: 30),
+          Center(child: const Text('Powered by GPT technology')),
         ],
       ),
     );
