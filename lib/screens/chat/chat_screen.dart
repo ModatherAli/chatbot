@@ -80,96 +80,100 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        title: const Text('AI ChatBot 👋'),
-        elevation: 0,
-        actions: [
-          IconButton(
-            onPressed: () {
-              _isRecording = false;
-              _showRecording = false;
-              setState(() {});
-              Navigator.push(
-                  context,
-                  PageTransition(
-                      type: PageTransitionType.rightToLeft,
-                      child: const SettingsScreen()));
-            },
-            icon: const Icon(
-              Icons.menu,
-              size: 30,
+    return GetBuilder<ChatController>(builder: (_) {
+      return Scaffold(
+        resizeToAvoidBottomInset: true,
+        appBar: AppBar(
+          title: const Text('AI ChatBot 👋'),
+          elevation: 0,
+          actions: [
+            IconButton(
+              onPressed: () {
+                _isRecording = false;
+                _showRecording = false;
+                setState(() {});
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.rightToLeft,
+                        child: const SettingsScreen()));
+              },
+              icon: const Icon(
+                Icons.menu,
+                size: 30,
+              ),
             ),
-          ),
-        ],
-      ),
-      body: GetBuilder<ChatController>(builder: (_) {
-        return AnimatedPadding(
+          ],
+        ),
+        body: AnimatedPadding(
           duration: const Duration(milliseconds: 200),
           padding: EdgeInsets.only(bottom: _showRecording ? 270 : 80, top: 10),
           child: ChatMessagesList(
             messages: _chatController.chatMessage,
             scrollController: _scrollController,
           ),
-        );
-      }),
-      bottomSheet: GetBuilder<SettingsController>(builder: (themeController) {
-        return AnimatedContainer(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          curve: Curves.bounceOut,
-          duration: const Duration(milliseconds: 500),
-          onEnd: () {
-            setState(() {
-              _showRecording = _isRecording;
-            });
-          },
-          height: _isRecording ? 250 : null,
-          constraints: const BoxConstraints(maxHeight: 300, minHeight: 50),
-          padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-          child: Visibility(
-              visible: _isRecording,
-              replacement: Container(
-                constraints: const BoxConstraints(maxHeight: 150),
-                child: UserTextField(
-                  textController: _textController,
-                  onChanged: (value) {
-                    setState(() {});
-                  },
-                  onMicPressed: () {
-                    _isRecording = true;
-                    setState(() {});
-                  },
-                  onSendText: () async {
-                    await _sendMessage(_textController.text);
-                  },
+        ),
+        bottomSheet: GetBuilder<SettingsController>(builder: (themeController) {
+          return AnimatedContainer(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            curve: Curves.bounceOut,
+            duration: const Duration(milliseconds: 500),
+            onEnd: () {
+              setState(() {
+                _showRecording = _isRecording;
+              });
+            },
+            height: _isRecording ? 250 : null,
+            constraints: const BoxConstraints(maxHeight: 300, minHeight: 50),
+            padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+            child: Visibility(
+                visible: _isRecording,
+                replacement: Container(
+                  constraints: const BoxConstraints(maxHeight: 150),
+                  child: UserTextField(
+                    textController: _textController,
+                    onChanged: (value) {
+                      setState(() {});
+                    },
+                    onMicPressed: _chatController.isNewMessage
+                        ? null
+                        : () {
+                            _isRecording = true;
+                            setState(() {});
+                          },
+                    onSendText: _chatController.isNewMessage
+                        ? null
+                        : () async {
+                            await _sendMessage(_textController.text);
+                          },
+                  ),
                 ),
-              ),
-              child: MicView(
-                text: _speechToText.isListening
-                    ? _lastWords
-                    : 'Hi. You can ask me anything'.tr,
-                speechEnabled: _speechToText.isListening,
-                onRecord: () async {
-                  _speechEnabled = !_speechEnabled;
-                  if (!_speechInit) {
-                    await _initSpeech();
-                  }
-                  if (_speechToText.isNotListening) {
-                    await _startListening(themeController.voiceLocal);
-                  } else {
-                    await _stopListening();
-                  }
+                child: MicView(
+                  text: _speechToText.isListening
+                      ? _lastWords
+                      : 'Hi. You can ask me anything'.tr,
+                  speechEnabled: _speechToText.isListening,
+                  onRecord: () async {
+                    _speechEnabled = !_speechEnabled;
+                    if (!_speechInit) {
+                      await _initSpeech();
+                    }
+                    if (_speechToText.isNotListening) {
+                      await _startListening(themeController.voiceLocal);
+                    } else {
+                      await _stopListening();
+                    }
 
-                  setState(() {});
-                },
-                onKeyboardPressed: () {
-                  _isRecording = false;
-                  setState(() {});
-                },
-              )),
-        );
-      }),
-    );
+                    setState(() {});
+                  },
+                  onKeyboardPressed: () {
+                    _isRecording = false;
+                    setState(() {});
+                  },
+                )),
+          );
+        }),
+      );
+    });
   }
 }

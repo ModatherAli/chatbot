@@ -67,7 +67,8 @@ class _UserTextFieldState extends State<UserTextField> {
                       controller: widget.textController,
                       onChanged: widget.onChanged,
                       maxLines: null,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
+                        hintText: 'Message'.tr,
                         border: UnderlineInputBorder(
                           borderSide: BorderSide(
                             width: 0,

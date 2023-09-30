@@ -35,10 +35,16 @@ class _AIMessageState extends State<AIMessage> {
             child: AnimatedTextKit(
                 onFinished: () {
                   print('Finished');
-                  setState(() => _isTyping = false);
+                  chatController.isNewMessage = false;
+                  _isTyping = false;
+                  // setState(() => _isTyping = false);
+                  chatController.update();
                 },
                 onTap: () {
-                  setState(() => _isTyping = false);
+                  chatController.isNewMessage = false;
+                  _isTyping = false;
+                  chatController.update();
+                  // setState(() => _isTyping = false);
                 },
                 displayFullTextOnTap: true,
                 totalRepeatCount: 1,

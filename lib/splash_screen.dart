@@ -17,8 +17,8 @@ class _AnimatedScreenState extends State<AnimatedScreen>
   late AnimationController _controller;
   @override
   void initState() {
-    _controller =
-        AnimationController(vsync: this, duration: const Duration(seconds: 2));
+    _controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 1000));
 
     super.initState();
   }

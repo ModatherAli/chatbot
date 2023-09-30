@@ -3,50 +3,6 @@ import 'package:get/get_navigation/src/root/internacionalization.dart';
 class AppLocale implements Translations {
   @override
   Map<String, Map<String, String>> get keys => {
-        "en": {
-          "You have 0 free message left. ": "You have 0 free message left. ",
-          "You have 1 free message left. ": "You have 1 free message left. ",
-          "You have 2 free message left. ": "You have 2 free message left. ",
-          "You have 3 free message left. ": "You have 3 free message left. ",
-          "Go Premium": "Go Premium",
-          'UNLOCK \nFULL ACCESS': 'UNLOCK \nFULL ACCESS',
-          'Voice Assistant': 'Voice Assistant',
-          'Unlimited answers': 'Unlimited answers',
-          'Up to 2000 words per answer': 'Up to 2000 words per answer',
-          'Up to 1000 words per prompt': 'Up to 1000 words per prompt',
-          'Higher word limit': 'Higher word limit',
-          'CONTINUE': 'CONTINUE',
-          'Terms of Use': 'Terms of Use',
-          'Privacy Policy': 'Privacy Policy',
-          'SETTINGS': 'SETTINGS',
-          "Status: Free": "Status: Free",
-          'general': 'general',
-          'Dark theme': 'Dark theme',
-          'customer service': 'customer service',
-          'Share': 'Share',
-          'Rate App': 'Rate App',
-          'Contact us': 'Contact us',
-          'policy': 'policy',
-          'Hi. You can ask me anything': 'Hi. You can ask me anything',
-          'On': 'On',
-          'Off': 'Off',
-          'Language': 'Language',
-          'Watch Ad to get more free messages':
-              'Watch Ad to get more free messages',
-          'Or': 'Or',
-          'Download': 'Download',
-          'Copy': 'Copy',
-          'WEEKLY': 'WEEKLY',
-          'Per week\nAuto-renewable weekly': 'Per week\nAuto-renewable weekly',
-          'MONTHLY': 'MONTHLY',
-          'Per month\nAuto-renewable monthly':
-              'Per month\nAuto-renewable monthly',
-          'YEARLY': 'YEARLY',
-          'Per year\nAuto-renewable yearly': 'Per year\nAuto-renewable yearly',
-          "Status: pro": "Status: pro",
-          'Save': 'Save',
-          'Saved': 'Saved',
-        },
         "ar": {
           "You have 3 free message left. ": 'لديك 3 رسائل مجانية متبقية ',
           "You have 2 free message left. ": 'لديك 2 رسائل مجانية متبقية ',
@@ -96,6 +52,7 @@ class AppLocale implements Translations {
           'Back': 'رجوع',
           'Remove all': 'حذف الكل',
           'Delete the chat': 'حذف المحادثة',
+          'Message': 'رسالة',
         },
       };
 }
